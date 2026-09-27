@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A merchandise item in the store catalogue",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number", "description": "Numeric identifier of the product" },
+        "name": { "type": "string", "description": "Product display name" },
+        "price": { "type": "number", "description": "Retail price in TND" },
+        "description": { "type": "string", "description": "Detailed description of the product" },
+        "image": { "type": "string", "description": "URL to main product image" },
+        "category": { "type": "string", "description": "Category name" },
+        "sku": { "type": "string", "description": "Stock Keeping Unit code" },
+        "source": { "type": "string", "description": "Source origin of the product: csv, manual, initial" },
+        "isCsvImported": { "type": "boolean", "description": "Flag indicating if item came from CSV" },
+        "csvBatchId": { "type": "string", "description": "Identifier of the CSV batch" },
+        "csvFileName": { "type": "string", "description": "Original file name of the CSV file" },
+        "importedAt": { "type": "string", "description": "Timestamp of CSV import" },
+        "discount": { "type": "number", "description": "Discount percentage or amount" },
+        "compareAtPrice": { "type": "number", "description": "Original comparison price before discount" }
+      },
+      "required": ["id", "name", "price", "category", "image"]
+    },
+    "CustomerOrder": {
+      "title": "CustomerOrder",
+      "description": "An order placed by a customer in the store",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Order unique identifier" },
+        "customer": { "type": "string", "description": "Customer full name" },
+        "phone": { "type": "string", "description": "Customer contact phone number" },
+        "address": { "type": "string", "description": "Shipping delivery address" },
+        "city": { "type": "string", "description": "Shipping city or region" },
+        "items": { "type": "string", "description": "Serialized summary or items in order" },
+        "total": { "type": "number", "description": "Total order amount in TND" },
+        "status": { "type": "string", "enum": ["جديد", "قيد التجهيز", "تم الشحن", "مكتمل", "ملغي"], "description": "Current fulfillment status" },
+        "date": { "type": "string", "description": "Human readable order date" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of order creation" }
+      },
+      "required": ["id", "customer", "phone", "total", "status"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Public catalog of products readable by everyone and editable by the store manager"
+    },
+    "/orders/{orderId}": {
+      "schema": "CustomerOrder",
+      "description": "Orders placed by customers; creatable by public checkout and manageable by store manager"
+    }
+  }
+}
