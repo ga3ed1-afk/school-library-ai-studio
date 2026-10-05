@@ -122,20 +122,20 @@ export default function ProductReviews({ productId, productName }: ProductReview
     : '5.0';
 
   return (
-    <section className="bg-white rounded-2xl border border-stone-100 shadow-md p-6 lg:p-8 mt-12 text-right" dir="rtl">
+    <section className="bg-white rounded-lg border border-indigo-100 shadow-xs p-6 lg:p-8 mt-12 text-right" dir="rtl">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-stone-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-indigo-50">
         <div className="flex items-center gap-3">
-          <span className="w-1.5 h-6 bg-oxford-red rounded-full" />
-          <h2 className="text-xl font-bold text-stone-900">تقييمات وآراء العملاء</h2>
-          <span className="text-xs bg-stone-100 text-stone-600 px-2.5 py-0.5 rounded-full font-bold">
+          <span className="w-1.5 h-6 bg-gradient-to-b from-indigo-600 to-rose-500 rounded-xs" />
+          <h2 className="text-xl font-extrabold text-stone-900">تقييمات وآراء العملاء</h2>
+          <span className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-md font-bold border border-indigo-100">
             {reviews.length} تقييم
           </span>
         </div>
 
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-oxford-blue hover:bg-oxford-blue/90 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 self-start sm:self-auto cursor-pointer"
+          className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 self-start sm:self-auto cursor-pointer shadow-xs"
         >
           <MessageSquare size={14} />
           <span>{showAddForm ? 'إلغاء التقييم' : 'أضف تقييمك'}</span>
@@ -143,17 +143,17 @@ export default function ProductReviews({ productId, productName }: ProductReview
       </div>
 
       {isSuccessMessage && (
-        <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-xl flex items-center gap-2">
+        <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-md flex items-center gap-2">
           <CheckCircle size={16} className="text-emerald-600 shrink-0" />
           <span>شكراً لك! تم نشر تقييمك بنجاح.</span>
         </div>
       )}
 
       {/* Ratings Summary Card */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 border-b border-stone-100 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 border-b border-indigo-50 items-center">
         {/* Big Average */}
-        <div className="text-center md:border-l md:border-stone-100 md:pl-6">
-          <div className="text-4xl lg:text-5xl font-black text-oxford-blue mb-1">
+        <div className="text-center md:border-l md:border-indigo-50 md:pl-6">
+          <div className="text-4xl lg:text-5xl font-black text-indigo-600 mb-1">
             {averageRating}
           </div>
           <div className="flex items-center justify-center gap-1 text-amber-500 mb-1">
@@ -161,7 +161,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
               <Star
                 key={star}
                 size={18}
-                className={star <= Math.round(Number(averageRating)) ? "fill-current" : "text-stone-300"}
+                className={star <= Math.round(Number(averageRating)) ? "fill-current" : "text-stone-200"}
               />
             ))}
           </div>
@@ -178,9 +178,9 @@ export default function ProductReviews({ productId, productName }: ProductReview
                 <span className="w-12 text-stone-600 font-bold flex items-center gap-1">
                   {ratingVal} <Star size={11} className="fill-current text-amber-500" />
                 </span>
-                <div className="flex-1 h-2 bg-stone-100 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-indigo-50 rounded-xs overflow-hidden">
                   <div
-                    className="h-full bg-amber-400 rounded-full transition-all duration-500"
+                    className="h-full bg-amber-400 rounded-xs transition-all duration-500"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
@@ -193,7 +193,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
 
       {/* Add Review Form */}
       {showAddForm && (
-        <form onSubmit={handleAddReview} className="p-4 bg-stone-50 rounded-xl border border-stone-200 mt-6 space-y-3">
+        <form onSubmit={handleAddReview} className="p-5 bg-indigo-50/30 rounded-lg border border-indigo-100 mt-6 space-y-3.5">
           <h4 className="text-sm font-bold text-stone-900">شاركنا رأيك في {productName}</h4>
           
           <div>
@@ -218,7 +218,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
                   />
                 </button>
               ))}
-              <span className="text-xs text-stone-600 mr-2 font-bold">
+              <span className="text-xs text-indigo-700 mr-2 font-bold">
                 {newRating === 5 ? 'ممتاز جداً' : newRating === 4 ? 'جيد جداً' : newRating === 3 ? 'متوسط' : 'أقل من المتوقع'}
               </span>
             </div>
@@ -232,7 +232,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
               value={newAuthor}
               onChange={(e) => setNewAuthor(e.target.value)}
               placeholder="مثال: أنيس التونسي"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs focus:outline-none focus:border-oxford-blue bg-white"
+              className="w-full px-3.5 py-2.5 rounded-md border border-indigo-100 text-xs focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 bg-white"
             />
           </div>
 
@@ -244,13 +244,13 @@ export default function ProductReviews({ productId, productName }: ProductReview
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="اكتب تجربتك مع المنتج، جودة الصنع، أو سرعة التوصيل..."
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs focus:outline-none focus:border-oxford-blue bg-white"
+              className="w-full px-3.5 py-2.5 rounded-md border border-indigo-100 text-xs focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 bg-white resize-none"
             />
           </div>
 
           <button
             type="submit"
-            className="bg-oxford-red hover:bg-oxford-red/90 text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-sm"
+            className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-md shadow-rose-200"
           >
             <Send size={14} />
             <span>نشر التقييم</span>
@@ -259,25 +259,25 @@ export default function ProductReviews({ productId, productName }: ProductReview
       )}
 
       {/* Reviews List */}
-      <div className="divide-y divide-stone-100 mt-6">
+      <div className="divide-y divide-indigo-50 mt-6">
         {reviews.map((review) => (
           <div key={review.id} className="py-5 space-y-2">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-oxford-blue/10 text-oxford-blue font-bold text-xs flex items-center justify-center">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-md bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
                   {review.author.charAt(0)}
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-xs font-bold text-stone-900">{review.author}</span>
                     {review.verified && (
-                      <span className="flex items-center gap-0.5 text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">
+                      <span className="flex items-center gap-0.5 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-xs font-bold border border-emerald-100">
                         <CheckCircle size={10} className="text-emerald-600" />
                         <span>مشتري موثّق</span>
                       </span>
                     )}
                   </div>
-                  <span className="text-[11px] text-stone-600">{review.date}</span>
+                  <span className="text-[11px] text-stone-400">{review.date}</span>
                 </div>
               </div>
 
@@ -286,21 +286,21 @@ export default function ProductReviews({ productId, productName }: ProductReview
                   <Star
                     key={star}
                     size={13}
-                    className={star <= review.rating ? "fill-current" : "text-stone-300"}
+                    className={star <= review.rating ? "fill-current" : "text-stone-200"}
                   />
                 ))}
               </div>
             </div>
 
-            <p className="text-xs text-stone-700 leading-relaxed font-medium pr-10">
+            <p className="text-xs text-stone-700 leading-relaxed font-medium pr-11">
               {review.comment}
             </p>
 
-            <div className="pr-10 flex items-center gap-4 text-[11px] text-stone-600 pt-1">
+            <div className="pr-11 flex items-center gap-4 text-[11px] text-stone-500 pt-1">
               <button
                 type="button"
                 onClick={() => handleLike(review.id)}
-                className="flex items-center gap-1 hover:text-oxford-blue transition-colors cursor-pointer"
+                className="flex items-center gap-1 hover:text-indigo-600 transition-colors cursor-pointer"
               >
                 <ThumbsUp size={12} />
                 <span>مفيد ({review.likes})</span>

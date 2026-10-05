@@ -130,62 +130,65 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
   // If order was successfully completed:
   if (orderSuccess) {
     return (
-      <div className="min-h-[75vh] flex items-center justify-center p-4 bg-stone-50/50 py-12">
+      <div className="min-h-[75vh] flex items-center justify-center p-4 bg-[#F8FAFC] py-12 text-slate-900">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-2xl w-full bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-stone-100 text-center"
+          className="max-w-2xl w-full bg-white rounded-md p-8 sm:p-12 shadow-2xl border border-slate-200/80 text-center relative overflow-hidden"
         >
-          <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+          {/* Subtle gold top border accent */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#D4AF37]" />
+
+          <div className="w-20 h-20 bg-amber-50 text-[#B8860B] rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-amber-200/60">
             <CheckCircle2 size={44} className="stroke-[2.5]" />
           </div>
 
-          <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full inline-block mb-3">
+          <span className="text-xs font-black text-amber-900 uppercase tracking-widest bg-amber-50 px-4 py-1.5 rounded-sm inline-block mb-3 border border-amber-200">
             تم استلام طلبك بنجاح
           </span>
 
-          <h1 className="text-3xl sm:text-4xl font-black text-oxford-blue mb-2">
-            شكراً لطلبك من أكسفورد!
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 mb-2">
+            شكراً لطلبك من مكتبة الهدى!
           </h1>
-          <p className="text-stone-500 font-medium mb-8">
-            رقم الطلب الخاص بك هو <span className="font-black text-oxford-blue text-lg dir-ltr">{orderSuccess.id}</span>. سنقوم بالتواصل معك عبر الهاتف لتأكيد موعد التوصيل.
+          <p className="text-slate-500 font-medium mb-8">
+            رقم الطلب الخاص بك هو <span className="font-black text-[#5794ff] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200 text-lg dir-ltr">{orderSuccess.id}</span>. سنقوم بالتواصل معك لتأكيد موعد التوصيل.
           </p>
 
           {/* Order Details card */}
-          <div className="bg-stone-50 rounded-2xl p-6 mb-8 text-right space-y-4 border border-stone-100">
-            <div className="flex justify-between items-center border-b border-stone-200 pb-3">
-              <span className="text-xs font-bold text-stone-500">العميل المستلم:</span>
-              <span className="font-black text-oxford-blue">{orderSuccess.customer}</span>
+          <div className="bg-[#5794ff]/[0.03] rounded-md p-6 mb-8 text-right space-y-4 border border-slate-200/90 shadow-2xs">
+            <div className="flex justify-between items-center border-b border-slate-200/70 pb-3">
+              <span className="text-xs font-bold text-slate-500">العميل المستلم:</span>
+              <span className="font-black text-slate-900">{orderSuccess.customer}</span>
             </div>
-            <div className="flex justify-between items-center border-b border-stone-200 pb-3">
-              <span className="text-xs font-bold text-stone-500">رقم الهاتف:</span>
-              <span className="font-bold text-oxford-blue dir-ltr">{orderSuccess.phone}</span>
+            <div className="flex justify-between items-center border-b border-slate-200/70 pb-3">
+              <span className="text-xs font-bold text-slate-500">رقم الهاتف:</span>
+              <span className="font-bold text-slate-900 dir-ltr">{orderSuccess.phone}</span>
             </div>
-            <div className="flex justify-between items-center border-b border-stone-200 pb-3">
-              <span className="text-xs font-bold text-stone-500">عنوان التوصيل:</span>
-              <span className="font-bold text-stone-700">{orderSuccess.address} - {orderSuccess.city}</span>
+            <div className="flex justify-between items-center border-b border-slate-200/70 pb-3">
+              <span className="text-xs font-bold text-slate-500">عنوان التوصيل:</span>
+              <span className="font-bold text-slate-700">{orderSuccess.address} - {orderSuccess.city}</span>
             </div>
-            <div className="flex justify-between items-center border-b border-stone-200 pb-3">
-              <span className="text-xs font-bold text-stone-500">طريقة الدفع:</span>
-              <span className="font-black text-oxford-blue">{orderSuccess.paymentMethod}</span>
+            <div className="flex justify-between items-center border-b border-slate-200/70 pb-3">
+              <span className="text-xs font-bold text-slate-500">طريقة الدفع:</span>
+              <span className="font-black text-[#5794ff]">{orderSuccess.paymentMethod}</span>
             </div>
             <div className="flex justify-between items-center pt-1">
-              <span className="text-base font-black text-oxford-blue">المبلغ الإجمالي المستحق:</span>
-              <span className="text-2xl font-black text-oxford-red">{orderSuccess.total.toFixed(3)} د.ت</span>
+              <span className="text-base font-black text-slate-900">المبلغ الإجمالي المستحق:</span>
+              <span className="text-2xl font-black text-[#5794ff]">{orderSuccess.total.toFixed(3)} <span className="text-sm font-bold text-slate-600">د.ت</span></span>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               to="/" 
-              className="bg-oxford-blue text-white px-8 py-4 rounded-xl font-black shadow-lg shadow-oxford-blue/20 hover:bg-oxford-red transition-all flex items-center justify-center gap-2"
+              className="bg-[#5794ff] text-white px-8 py-3.5 rounded-md font-black shadow-md hover:bg-[#3b7ef5] transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <ShoppingBag size={20} />
               مواصلة التسوق
             </Link>
             <Link 
               to="/dashboard?tab=orders" 
-              className="bg-stone-100 text-oxford-blue px-8 py-4 rounded-xl font-black hover:bg-stone-200 transition-all flex items-center justify-center gap-2"
+              className="bg-slate-900 text-white px-8 py-3.5 rounded-md font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 border border-slate-700 cursor-pointer"
             >
               <PackageCheck size={20} />
               عرض في لوحة التحكم (الطلبات)
@@ -199,17 +202,17 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
   // If cart is empty
   if (cart.length === 0) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-8 bg-white">
-        <div className="w-24 h-24 bg-stone-50 text-stone-300 rounded-full flex items-center justify-center mb-6">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-8 bg-[#F8FAFC]">
+        <div className="w-24 h-24 bg-blue-50 text-[#5794ff] rounded-md flex items-center justify-center mb-6 border border-blue-200/60 shadow-xs">
           <ShoppingBag size={48} />
         </div>
-        <h1 className="text-3xl font-black text-oxford-blue mb-3">سلة المشتريات فارغة</h1>
-        <p className="text-stone-500 font-medium mb-8 max-w-md">
-          لم تقم بإضافة أي منتجات إلى السلة بعد. تصفح منتجات أكسفورد التونسية الفاخرة واختر ما يناسبك!
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-3">سلة المشتريات فارغة</h1>
+        <p className="text-slate-500 font-medium mb-8 max-w-md">
+          لم تقم بإضافة أي منتجات إلى السلة بعد. تصفح تشكيلات مكتبة الهدى المميزة واختر ما يناسبك!
         </p>
         <Link 
           to="/" 
-          className="bg-oxford-blue text-white px-8 py-4 rounded-xl font-black shadow-xl shadow-oxford-blue/20 hover:bg-oxford-red transition-all flex items-center gap-2"
+          className="bg-[#5794ff] text-white px-8 py-3.5 rounded-md font-black shadow-md hover:bg-[#3b7ef5] transition-all flex items-center gap-2"
         >
           <ArrowRight size={20} className="rotate-180" />
           تصفح المنتجات
@@ -219,18 +222,18 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
   }
 
   return (
-    <div className="bg-stone-50/60 min-h-screen py-8 sm:py-12">
+    <div className="bg-[#F8FAFC] min-h-screen py-8 sm:py-12 text-slate-900">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Breadcrumb Header */}
-        <div className="flex items-center gap-2 text-xs font-bold text-stone-400 mb-6">
-          <Link to="/" className="hover:text-oxford-blue transition-colors">الرئيسية</Link>
-          <ChevronRight size={14} className="rotate-180" />
-          <span className="text-oxford-blue">إتمام الطلب والدفع</span>
+        <div className="flex items-center gap-2 text-xs font-bold text-slate-500 mb-6">
+          <Link to="/" className="hover:text-[#5794ff] transition-colors">الرئيسية</Link>
+          <ChevronRight size={14} className="rotate-180 text-slate-300" />
+          <span className="text-[#5794ff] font-black">إتمام الطلب والدفع</span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-black text-oxford-blue mb-8 flex items-center gap-3">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-8 flex items-center gap-3">
           <span>إتمام الطلب والدفع</span>
-          <span className="text-xs font-black bg-oxford-blue/10 text-oxford-blue px-3 py-1 rounded-full">
+          <span className="text-xs font-black bg-[#5794ff] text-white px-3 py-1 rounded-full shadow-xs">
             {cart.reduce((s, i) => s + i.quantity, 0)} عناصر
           </span>
         </h1>
@@ -242,21 +245,21 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
             <div className="lg:col-span-7 space-y-6">
               
               {/* Shipping Address Section */}
-              <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-xs border border-stone-100">
+              <div className="bg-white rounded-md p-6 sm:p-8 shadow-xs border border-slate-200/90">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-oxford-blue/5 text-oxford-blue flex items-center justify-center font-black">
+                  <div className="w-10 h-10 rounded-md bg-[#5794ff] text-white flex items-center justify-center font-black shadow-xs">
                     <MapPin size={20} />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black text-oxford-blue">معلومات التوصيل والشحن</h2>
-                    <p className="text-xs text-stone-400 font-bold">أدخل بيانات العنوان بدقة لتسريع وصول طلبك</p>
+                    <h2 className="text-lg font-black text-slate-900">معلومات التوصيل والشحن</h2>
+                    <p className="text-xs text-slate-400 font-medium">أدخل بيانات العنوان بدقة لتسريع وصول طلبك</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5 md:col-span-2">
-                    <label className="text-xs font-black text-stone-700 flex items-center gap-1">
-                      <User size={14} />
+                    <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
+                      <User size={14} className="text-[#D4AF37]" />
                       الاسم الكامل *
                     </label>
                     <input 
@@ -265,13 +268,13 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="مثال: أحمد بن علي"
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-3.5 focus:bg-white focus:border-oxford-blue outline-none transition-all font-bold text-sm text-stone-800"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-md py-2.5 px-3.5 focus:bg-white focus:border-[#D4AF37] focus:ring-2 focus:ring-amber-200/40 outline-none transition-all font-bold text-sm text-slate-800"
                     />
                   </div>
 
                   <div className="space-y-1.5 md:col-span-2">
-                    <label className="text-xs font-black text-stone-700 flex items-center gap-1">
-                      <Phone size={14} />
+                    <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
+                      <Phone size={14} className="text-[#D4AF37]" />
                       رقم الهاتف (للتواصل عند التسليم) *
                     </label>
                     <input 
@@ -280,28 +283,28 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="+216 22 333 444"
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-3.5 focus:bg-white focus:border-oxford-blue outline-none transition-all font-bold text-sm text-stone-800 dir-ltr text-right"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-md py-2.5 px-3.5 focus:bg-white focus:border-[#D4AF37] focus:ring-2 focus:ring-amber-200/40 outline-none transition-all font-bold text-sm text-slate-800 dir-ltr text-right"
                     />
                   </div>
 
                   <div className="space-y-1.5 md:col-span-2">
-                    <label className="text-xs font-black text-stone-700">العنوان الكامل والنهج *</label>
+                    <label className="text-xs font-bold text-slate-700">العنوان الكامل والنهج *</label>
                     <input 
                       type="text" 
                       required
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder="نهج، عمارة، شقة، الحي"
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-3.5 focus:bg-white focus:border-oxford-blue outline-none transition-all font-bold text-sm text-stone-800"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-md py-2.5 px-3.5 focus:bg-white focus:border-[#D4AF37] focus:ring-2 focus:ring-amber-200/40 outline-none transition-all font-bold text-sm text-slate-800"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-black text-stone-700">المدينة / الولاية *</label>
+                    <label className="text-xs font-bold text-slate-700">المدينة / الولاية *</label>
                     <select
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-3.5 focus:bg-white focus:border-oxford-blue outline-none transition-all font-bold text-sm text-stone-800"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-md py-2.5 px-3.5 focus:bg-white focus:border-[#D4AF37] outline-none transition-all font-bold text-sm text-slate-800 cursor-pointer"
                     >
                       <option value="تونس">تونس</option>
                       <option value="أريانة">أريانة</option>
@@ -320,48 +323,48 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-black text-stone-700">الترقيم البريدي</label>
+                    <label className="text-xs font-bold text-slate-700">الترقيم البريدي</label>
                     <input 
                       type="text" 
                       value={postalCode}
                       onChange={(e) => setPostalCode(e.target.value)}
                       placeholder="1000"
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-3.5 focus:bg-white focus:border-oxford-blue outline-none transition-all font-bold text-sm text-stone-800"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-md py-2.5 px-3.5 focus:bg-white focus:border-[#D4AF37] focus:ring-2 focus:ring-amber-200/40 outline-none transition-all font-bold text-sm text-slate-800"
                     />
                   </div>
 
                   <div className="space-y-1.5 md:col-span-2">
-                    <label className="text-xs font-black text-stone-700">ملاحظات إضافية للتوصيل (اختياري)</label>
+                    <label className="text-xs font-bold text-slate-700">ملاحظات إضافية للتوصيل (اختياري)</label>
                     <textarea 
                       rows={2}
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="أي تعليمات إضافية لمندوب الشحن..."
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-3.5 focus:bg-white focus:border-oxford-blue outline-none transition-all font-medium text-sm text-stone-800 resize-none"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-md py-2.5 px-3.5 focus:bg-white focus:border-[#D4AF37] outline-none transition-all font-medium text-sm text-slate-800 resize-none"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Shipping Method Section */}
-              <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-xs border border-stone-100">
+              <div className="bg-white rounded-md p-6 sm:p-8 shadow-xs border border-slate-200/90">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-oxford-blue/5 text-oxford-blue flex items-center justify-center font-black">
+                  <div className="w-10 h-10 rounded-md bg-[#5794ff] text-white flex items-center justify-center font-black shadow-xs">
                     <Truck size={20} />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black text-oxford-blue">خيار الشحن</h2>
-                    <p className="text-xs text-stone-400 font-bold">حدد سرعة وطريقة التوصيل المناسبة</p>
+                    <h2 className="text-lg font-black text-slate-900">خيار الشحن</h2>
+                    <p className="text-xs text-slate-400 font-medium">حدد سرعة وطريقة التوصيل المناسبة</p>
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   <label 
                     onClick={() => setShippingMethod('express')}
-                    className={`flex items-center justify-between p-4 rounded-xl cursor-pointer border-2 transition-all ${
+                    className={`flex items-center justify-between p-4 rounded-md cursor-pointer border-2 transition-all ${
                       shippingMethod === 'express' 
-                        ? 'border-oxford-blue bg-oxford-blue/5 shadow-2xs' 
-                        : 'border-stone-100 hover:border-stone-200 bg-white'
+                        ? 'border-[#5794ff] bg-blue-50/50 shadow-xs ring-1 ring-[#5794ff]' 
+                        : 'border-slate-100 hover:border-slate-200 bg-white'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -370,22 +373,22 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                         name="shippingOption" 
                         checked={shippingMethod === 'express'} 
                         onChange={() => setShippingMethod('express')}
-                        className="w-4 h-4 text-oxford-blue" 
+                        className="w-4 h-4 accent-[#5794ff]" 
                       />
                       <div>
-                        <p className="font-black text-oxford-blue text-sm">توصيل سريع (Aramex)</p>
-                        <p className="text-[11px] text-stone-400 font-bold">التوصيل خلال ٢٤-٤٨ ساعة مباشرة لباب المنزل</p>
+                        <p className="font-extrabold text-slate-900 text-sm">توصيل سريع خاص (Aramex VIP)</p>
+                        <p className="text-[11px] text-slate-500 font-medium">التوصيل خلال ٢٤-٤٨ ساعة مباشرة لباب المنزل</p>
                       </div>
                     </div>
-                    <span className="font-black text-oxford-blue text-sm">7.000 د.ت</span>
+                    <span className="font-black text-[#5794ff] text-sm">7.000 د.ت</span>
                   </label>
 
                   <label 
                     onClick={() => setShippingMethod('standard')}
-                    className={`flex items-center justify-between p-4 rounded-xl cursor-pointer border-2 transition-all ${
+                    className={`flex items-center justify-between p-4 rounded-md cursor-pointer border-2 transition-all ${
                       shippingMethod === 'standard' 
-                        ? 'border-oxford-blue bg-oxford-blue/5 shadow-2xs' 
-                        : 'border-stone-100 hover:border-stone-200 bg-white'
+                        ? 'border-[#5794ff] bg-blue-50/50 shadow-xs ring-1 ring-[#5794ff]' 
+                        : 'border-slate-100 hover:border-slate-200 bg-white'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -394,11 +397,11 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                         name="shippingOption" 
                         checked={shippingMethod === 'standard'} 
                         onChange={() => setShippingMethod('standard')}
-                        className="w-4 h-4 text-oxford-blue" 
+                        className="w-4 h-4 accent-[#5794ff]" 
                       />
                       <div>
-                        <p className="font-black text-oxford-blue text-sm">توصيل عادي</p>
-                        <p className="text-[11px] text-stone-400 font-bold">التوصيل خلال ٣-٥ أيام عمل</p>
+                        <p className="font-extrabold text-slate-900 text-sm">توصيل قياسي مجاني</p>
+                        <p className="text-[11px] text-slate-500 font-medium">التوصيل خلال ٣-٥ أيام عمل</p>
                       </div>
                     </div>
                     <span className="font-black text-emerald-600 text-sm">مجاني</span>
@@ -407,24 +410,24 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
               </div>
 
               {/* Payment Method Section */}
-              <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-xs border border-stone-100">
+              <div className="bg-white rounded-md p-6 sm:p-8 shadow-xs border border-slate-200/90">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-oxford-blue/5 text-oxford-blue flex items-center justify-center font-black">
+                  <div className="w-10 h-10 rounded-md bg-[#5794ff] text-white flex items-center justify-center font-black shadow-xs">
                     <CreditCard size={20} />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black text-oxford-blue">طريقة الدفع</h2>
-                    <p className="text-xs text-stone-400 font-bold">اختر وسيلة الدفع الأكثر أماناً وملاءمة لك</p>
+                    <h2 className="text-lg font-black text-slate-900">طريقة الدفع</h2>
+                    <p className="text-xs text-slate-400 font-medium">اختر وسيلة الدفع الأكثر أماناً وملاءمة لك</p>
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   <label 
                     onClick={() => setPaymentMethod('cod')}
-                    className={`flex items-center justify-between p-4 rounded-xl cursor-pointer border-2 transition-all ${
+                    className={`flex items-center justify-between p-4 rounded-md cursor-pointer border-2 transition-all ${
                       paymentMethod === 'cod' 
-                        ? 'border-oxford-blue bg-oxford-blue/5 shadow-2xs' 
-                        : 'border-stone-100 hover:border-stone-200 bg-white'
+                        ? 'border-[#5794ff] bg-blue-50/50 shadow-xs ring-1 ring-[#5794ff]' 
+                        : 'border-slate-100 hover:border-slate-200 bg-white'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -433,22 +436,22 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                         name="paymentOption" 
                         checked={paymentMethod === 'cod'} 
                         onChange={() => setPaymentMethod('cod')}
-                        className="w-4 h-4 text-oxford-blue" 
+                        className="w-4 h-4 accent-[#5794ff]" 
                       />
                       <div>
-                        <p className="font-black text-oxford-blue text-sm">الدفع نقداً عند الاستلام (COD)</p>
-                        <p className="text-[11px] text-stone-400 font-bold">ادفع نقداً لمندوب التوصيل بعد استلام ومعاينة الطرد</p>
+                        <p className="font-extrabold text-slate-900 text-sm">الدفع نقداً عند الاستلام (COD)</p>
+                        <p className="text-[11px] text-slate-500 font-medium">ادفع نقداً لمندوب التوصيل بعد استلام ومعاينة الطرد</p>
                       </div>
                     </div>
-                    <span className="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">موصى به</span>
+                    <span className="text-xs font-bold bg-blue-50 text-[#5794ff] px-2.5 py-1 rounded-md border border-blue-200">موصى به</span>
                   </label>
 
                   <label 
                     onClick={() => setPaymentMethod('card')}
-                    className={`flex items-center justify-between p-4 rounded-xl cursor-pointer border-2 transition-all ${
+                    className={`flex items-center justify-between p-4 rounded-md cursor-pointer border-2 transition-all ${
                       paymentMethod === 'card' 
-                        ? 'border-oxford-blue bg-oxford-blue/5 shadow-2xs' 
-                        : 'border-stone-100 hover:border-stone-200 bg-white'
+                        ? 'border-[#5794ff] bg-blue-50/50 shadow-xs ring-1 ring-[#5794ff]' 
+                        : 'border-slate-100 hover:border-slate-200 bg-white'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -457,14 +460,14 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                         name="paymentOption" 
                         checked={paymentMethod === 'card'} 
                         onChange={() => setPaymentMethod('card')}
-                        className="w-4 h-4 text-oxford-blue" 
+                        className="w-4 h-4 accent-[#5794ff]" 
                       />
                       <div>
-                        <p className="font-black text-oxford-blue text-sm">البطاقة البنكية / البريدية (GDA / Visa / Mastercard)</p>
-                        <p className="text-[11px] text-stone-400 font-bold">دفع إلكتروني آمن 100% ومشفر بنظام 3D-Secure</p>
+                        <p className="font-extrabold text-slate-900 text-sm">البطاقة البنكية / البريدية (GDA / Visa / Mastercard)</p>
+                        <p className="text-[11px] text-slate-500 font-medium">دفع إلكتروني آمن 100% ومشفر بنظام 3D-Secure</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 text-[11px] font-bold text-stone-500">
+                    <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500">
                       <span>CIB / Flouci</span>
                     </div>
                   </label>
@@ -476,23 +479,23 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
             {/* Right Column: Order Summary & Review (5 cols) */}
             <div className="lg:col-span-5 space-y-6">
               
-              <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-xs border border-stone-100 sticky top-28 space-y-6">
-                <div className="flex items-center justify-between border-b border-stone-100 pb-4">
-                  <h3 className="text-lg font-black text-oxford-blue">ملخص الطلب</h3>
-                  <span className="text-xs font-bold text-stone-400">{cart.length} أنواع منتجات</span>
+              <div className="bg-white rounded-md p-6 sm:p-8 shadow-xs border border-slate-200/90 sticky top-28 space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <h3 className="text-lg font-black text-slate-900">ملخص الطلب</h3>
+                  <span className="text-xs font-bold text-slate-400">{cart.length} أنواع منتجات</span>
                 </div>
 
                 {/* Items List */}
                 <div className="space-y-4 max-h-72 overflow-y-auto pr-1">
                   {cart.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between gap-3 pb-3 border-b border-stone-100 last:border-b-0">
+                    <div key={item.id} className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100 last:border-b-0">
                       <div className="flex items-center gap-3">
-                        <div className="w-14 h-14 rounded-xl bg-stone-50 border border-stone-100 overflow-hidden shrink-0">
-                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                        <div className="w-14 h-14 rounded-md bg-white border border-slate-200 overflow-hidden shrink-0 p-1">
+                          <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
                         </div>
                         <div>
-                          <h4 className="text-xs font-black text-oxford-blue line-clamp-1">{item.name}</h4>
-                          <span className="text-[11px] text-stone-400 font-bold block">
+                          <h4 className="text-xs font-bold text-slate-900 line-clamp-1">{item.name}</h4>
+                          <span className="text-[11px] text-[#5794ff] font-extrabold block">
                             {item.price.toFixed(3)} د.ت
                           </span>
                         </div>
@@ -500,19 +503,19 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
 
                       <div className="flex items-center gap-3 shrink-0">
                         {/* Quantity controls */}
-                        <div className="flex items-center border border-stone-200 rounded-lg overflow-hidden bg-stone-50">
+                        <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-slate-50">
                           <button 
                             type="button"
                             onClick={() => updateQuantity(item.id, -1)}
-                            className="px-2 py-1 text-stone-500 hover:bg-stone-200 transition-colors"
+                            className="px-2 py-1 text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer"
                           >
                             <Minus size={12} />
                           </button>
-                          <span className="px-2 text-xs font-black text-oxford-blue">{item.quantity}</span>
+                          <span className="px-2 text-xs font-black text-slate-900">{item.quantity}</span>
                           <button 
                             type="button"
                             onClick={() => updateQuantity(item.id, 1)}
-                            className="px-2 py-1 text-stone-500 hover:bg-stone-200 transition-colors"
+                            className="px-2 py-1 text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer"
                           >
                             <Plus size={12} />
                           </button>
@@ -521,7 +524,7 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                         <button 
                           type="button"
                           onClick={() => removeItem(item.id)}
-                          className="text-stone-300 hover:text-red-500 transition-colors p-1"
+                          className="text-slate-300 hover:text-red-500 transition-colors p-1 cursor-pointer"
                           title="حذف من السلة"
                         >
                           <Trash2 size={14} />
@@ -532,19 +535,19 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                 </div>
 
                 {/* Promo Code Input */}
-                <div className="bg-stone-50 p-2.5 rounded-xl border border-stone-100">
+                <div className="bg-slate-50 p-2.5 rounded-md border border-slate-200">
                   <div className="flex gap-2">
                     <input 
-                      type="text"
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
+                      type="text" 
+                      value={promoCode} 
+                      onChange={(e) => setPromoCode(e.target.value)} 
                       placeholder="رمز ترويجي (جرب: OXFORD10)"
-                      className="bg-transparent border-none outline-none flex-1 font-bold text-xs px-2 text-stone-700 uppercase"
+                      className="bg-white border border-slate-200 rounded-md outline-none flex-1 font-bold text-xs px-2.5 py-1.5 text-slate-700 uppercase focus:border-[#5794ff]"
                     />
                     <button 
-                      type="button"
+                      type="button" 
                       onClick={handleApplyPromo}
-                      className="bg-oxford-blue text-white px-4 py-2 rounded-lg text-xs font-black hover:bg-oxford-red transition-all cursor-pointer"
+                      className="bg-[#5794ff] text-white px-4 py-2 rounded-md text-xs font-bold hover:bg-[#3b7ef5] transition-all cursor-pointer shadow-xs"
                     >
                       تطبيق
                     </button>
@@ -563,10 +566,10 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                 </div>
 
                 {/* Calculation breakdown */}
-                <div className="space-y-3 text-xs font-bold text-stone-500 pt-2 border-t border-stone-100">
+                <div className="space-y-3 text-xs font-bold text-slate-500 pt-2 border-t border-slate-100">
                   <div className="flex justify-between items-center">
                     <span>المجموع الفرعي:</span>
-                    <span className="text-oxford-blue font-black">{subtotal.toFixed(3)} د.ت</span>
+                    <span className="text-slate-900 font-black">{subtotal.toFixed(3)} د.ت</span>
                   </div>
                   {discountAmount > 0 && (
                     <div className="flex justify-between items-center text-emerald-600">
@@ -576,13 +579,13 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                   )}
                   <div className="flex justify-between items-center">
                     <span>رسوم الشحن والتوصيل:</span>
-                    <span className={shippingCost === 0 ? "text-emerald-600 font-black" : "text-oxford-blue font-black"}>
+                    <span className={shippingCost === 0 ? "text-emerald-600 font-black" : "text-slate-900 font-black"}>
                       {shippingCost === 0 ? 'مجاني' : `${shippingCost.toFixed(3)} د.ت`}
                     </span>
                   </div>
-                  <div className="border-t border-stone-100 pt-3 flex justify-between items-center">
-                    <span className="text-base font-black text-oxford-blue">الإجمالي للدفع:</span>
-                    <span className="text-2xl font-black text-oxford-red">{total.toFixed(3)} د.ت</span>
+                  <div className="border-t border-slate-100 pt-3 flex justify-between items-center">
+                    <span className="text-base font-black text-slate-900">الإجمالي للدفع:</span>
+                    <span className="text-2xl font-black text-[#5794ff]">{total.toFixed(3)} <span className="text-sm font-bold text-slate-600">د.ت</span></span>
                   </div>
                 </div>
 
@@ -590,11 +593,11 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                 <button 
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-oxford-blue hover:bg-oxford-red text-white py-4 rounded-xl font-black shadow-xl shadow-oxford-blue/20 transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
+                  className="w-full bg-[#5794ff] hover:bg-[#3b7ef5] text-white py-4 rounded-md font-black shadow-lg shadow-blue-500/25 hover:shadow-xl transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
-                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                      <span className="w-4 h-4 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin"></span>
                       جارٍ تسجيل وتأكيد الطلب...
                     </span>
                   ) : (
@@ -605,9 +608,9 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                   )}
                 </button>
 
-                <div className="flex items-center justify-center gap-2 text-stone-400 text-[11px] font-bold">
-                  <ShieldCheck size={14} className="text-emerald-500" />
-                  <span>ضمان الجودة والإرجاع السلس من أكسفورد</span>
+                <div className="flex items-center justify-center gap-2 text-slate-400 text-[11px] font-medium">
+                  <ShieldCheck size={14} className="text-[#D4AF37]" />
+                  <span>ضمان الجودة والأصالة من مكتبة الهدى</span>
                 </div>
               </div>
 

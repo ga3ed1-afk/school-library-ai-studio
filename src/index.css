@@ -3,8 +3,18 @@
 
 @theme {
   --font-sans: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --color-oxford-blue: #0EA5E9; /* Sky Blue */
-  --color-oxford-red: #F72020;
+  --color-oxford-blue: #5794ff; /* User specified blue */
+  --color-oxford-navy: #3b7ef5; /* Royal Blue */
+  --color-oxford-gold: #D4AF37; /* Luxury Royal Gold */
+  --color-oxford-gold-light: #F3E5AB; /* Champagne Gold */
+  --color-oxford-gold-dark: #B8860B; /* Deep Antique Gold */
+  --color-oxford-amber: #D97706;
+  --color-oxford-purple: #4383f5;
+  --color-oxford-violet: #2563eb;
+  --color-oxford-red: #D4AF37; /* Gold accent replacement for red */
+  --color-oxford-coral: #E5C07B;
+  --color-oxford-dark: #1e3a8a;
+  
 }
 
 html, body, button, input, select, textarea, p, span, h1, h2, h3, h4, h5, h6, a, label, table, th, td {
@@ -33,9 +43,12 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   html {
     direction: rtl;
     font-family: 'Cairo', system-ui, sans-serif;
+    background-color: #F8FAFC;
   }
   body {
     font-family: 'Cairo', system-ui, sans-serif;
+    background-color: #F8FAFC;
+    color: #1e293b;
   }
 }
 
@@ -59,8 +72,23 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
 
   .single-shopping-card-one {
     padding: 15px;
-    background: #F5F6F7;
-    border-radius: 6px;
+    background: #FFFFFF;
+    border-radius: 8px;
+  }
+
+  /* Luxury Blue & Gold gradient utility classes */
+  .bg-vivago-gradient {
+    background: linear-gradient(135deg, #5794ff 0%, #3b7ef5 50%, #D4AF37 100%);
+  }
+
+  .bg-vivago-btn {
+    background: linear-gradient(135deg, #DFB15B 0%, #D4AF37 50%, #B8860B 100%);
+  }
+
+  .text-vivago-gradient {
+    background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 50%, #DFB15B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   /* Product details list, colors, styles, and sizes styling */
@@ -74,7 +102,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     position: relative;
     padding-right: 1.25rem;
     margin-bottom: 0.35rem;
-    color: #1c1917;
+    color: #1E293B;
     font-size: 0.875rem;
     line-height: 1.5;
     font-weight: 500;
@@ -88,7 +116,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: #0EA5E9;
+    background-color: #D4AF37;
   }
 
   .list-colors {
@@ -112,7 +140,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .list-colors li.active span {
-    outline: 2px solid #0EA5E9;
+    outline: 2px solid #D4AF37;
     outline-offset: 2px;
   }
 
@@ -132,9 +160,9 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     justify-content: center;
     padding: 0.45rem 1rem;
     border-radius: 8px;
-    border: 1.5px solid #e7e5e4;
+    border: 1.5px solid #CBD5E1;
     background-color: #ffffff;
-    color: #1c1917;
+    color: #0F1E36;
     font-size: 0.8125rem;
     font-weight: 700;
     cursor: pointer;
@@ -143,15 +171,15 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .list-styles li:hover, .list-sizes li:hover {
-    border-color: #0EA5E9;
-    color: #0EA5E9;
+    border-color: #D4AF37;
+    color: #B8860B;
   }
 
   .list-styles li.active, .list-sizes li.active {
-    border-color: #0EA5E9;
-    background-color: #f0f9ff;
-    color: #0EA5E9;
-    box-shadow: 0 1px 2px rgba(14, 165, 233, 0.12);
+    border-color: #D4AF37;
+    background-color: #FEF9C3;
+    color: #92400E;
+    box-shadow: 0 1px 2px rgba(212, 175, 55, 0.2);
   }
 
   .btn.btn-cart {
@@ -161,9 +189,9 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     gap: 0.5rem;
     height: 44px;
     border-radius: 8px;
-    border: 1.5px solid #0EA5E9;
+    border: 1.5px solid #5794ff;
     background-color: #ffffff;
-    color: #0EA5E9;
+    color: #5794ff;
     font-size: 0.9rem;
     font-weight: 800;
     cursor: pointer;
@@ -171,8 +199,10 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .btn.btn-cart:hover {
-    background-color: #0EA5E9;
+    background-color: #5794ff;
     color: #ffffff;
+    border-color: #5794ff;
+    box-shadow: 0 4px 12px rgba(87, 148, 255, 0.35);
   }
 
   .btn.btn-buy {
@@ -183,19 +213,19 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     height: 44px;
     border-radius: 8px;
     border: none;
-    background-color: #F72020;
-    color: #ffffff;
+    background: linear-gradient(135deg, #DFB15B 0%, #D4AF37 50%, #B8860B 100%);
+    color: #0A192F;
     font-size: 0.9rem;
-    font-weight: 800;
+    font-weight: 900;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(247, 32, 32, 0.2);
+    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
   }
 
   .btn.btn-buy:hover {
-    background-color: #dc1818;
+    background: linear-gradient(135deg, #D4AF37 0%, #C5A059 50%, #A16207 100%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(247, 32, 32, 0.3);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
   }
 
   /* Shopify Product Form Input & Variants */
@@ -208,7 +238,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   .variants-label {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #142C73;
+    color: #1e293b;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
@@ -217,7 +247,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
 
   .variants-label__value {
     font-weight: 600;
-    color: #4B5563;
+    color: #B8860B;
   }
 
   .product-form__container {
@@ -245,10 +275,10 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     min-width: 76px;
     height: 42px;
     padding: 0 18px;
-    border-radius: 6px;
-    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
     background-color: #FFFFFF;
-    color: #142C73;
+    color: #1E293B;
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
@@ -257,17 +287,18 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .product-form__item--zoom label:hover {
-    border-color: #142C73;
+    border-color: #5794ff;
+    color: #5794ff;
     transform: translateY(-1px);
   }
 
   .product-form__item input[type="radio"]:checked + label {
-    border-color: #142C73;
+    border-color: #5794ff;
     border-width: 2px;
-    color: #142C73;
-    background-color: #F8FAFC;
-    font-weight: 700;
-    box-shadow: 0 1px 3px rgba(20, 44, 115, 0.12);
+    color: #5794ff;
+    background-color: #eff6ff;
+    font-weight: 800;
+    box-shadow: 0 1px 3px rgba(87, 148, 255, 0.25);
   }
 
   /* Product Buttons / Add to Cart & Buy Now */
@@ -297,8 +328,8 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     width: 110px;
     min-width: 105px;
     height: 40px;
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
     background: #FFFFFF;
     flex-shrink: 0;
   }
@@ -318,12 +349,13 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     background: transparent;
     border: none;
     cursor: pointer;
-    color: #142C73;
+    color: #5794ff;
     transition: background-color 0.15s ease;
   }
 
   .quantity__button:hover {
-    background-color: #F3F4F6;
+    background-color: #eff6ff;
+    color: #3b7ef5;
   }
 
   .quantity__button svg {
@@ -339,7 +371,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     text-align: center;
     font-size: 0.875rem;
     font-weight: 700;
-    color: #142C73;
+    color: #1e293b;
     border: none;
     background: transparent;
     outline: none;
@@ -359,10 +391,10 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    border: 1.5px solid #142C73;
-    border-radius: 6px;
+    border: 1.5px solid #5794ff;
+    border-radius: 8px;
     background-color: #FFFFFF;
-    color: #142C73;
+    color: #5794ff;
     font-size: 0.875rem;
     font-weight: 700;
     cursor: pointer;
@@ -377,12 +409,12 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .product-form__submit:hover {
-    background-color: #142C73;
-    color: #FFFFFF;
+    background-color: #5794ff;
+    color: #ffffff;
   }
 
   .product-form__submit:hover svg path {
-    fill: #FFFFFF;
+    fill: #ffffff;
   }
 
   .shopify-payment-button {
@@ -403,20 +435,20 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #142C73;
-    color: #FFFFFF;
+    background: linear-gradient(135deg, #DFB15B 0%, #D4AF37 50%, #B8860B 100%);
+    color: #0A192F;
     font-size: 0.9rem;
-    font-weight: 700;
-    border-radius: 6px;
+    font-weight: 900;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    box-shadow: 0 1px 3px rgba(20, 44, 115, 0.12);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
   }
 
   .shopify-payment-button__button:hover {
-    background-color: #0d1e52;
-    box-shadow: 0 2px 6px rgba(20, 44, 115, 0.2);
+    background: linear-gradient(135deg, #D4AF37 0%, #C5A059 50%, #A16207 100%);
+    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.45);
   }
 }
 

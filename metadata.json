@@ -1,6 +1,8 @@
 {
-  "name": "أكسفورد سيتي",
-  "description": "أكبر سلسلة مكتبات ولوازم مدرسية في تونس. نقدم لكم أفضل الماركات العالمية بجودة لا تضاهى.",
+  "name": "Remix أكسفورد سيتي",
+  "description": "سلسلة مكتبات ولوازم مدرسية . نقدم لكم أفضل الماركات العالمية بجودة لا تضاهى.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

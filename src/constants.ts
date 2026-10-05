@@ -112,18 +112,11 @@ export const products: Product[] = [
     description: "حقيبة مدرسية عالية الجودة بتصميم مريح للظهر ومساحات تخزين متعددة.",
     image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=800",
     category: "حقائب وأمتعة",
+    subcategory: "🎒 حقائب مدرسية وحقائب متنوعة",
     colors: ["Noir", "Bleu", "Rouge"],
-    styles: ["طراز قياسي", "طراز بريميوم"],
-    sizes: ["حجم قياسي", "حجم كبير (XL)"],
-    bulletPoints: [
-      "تصميم طبي مريح للأكتاف والظهر",
-      "أقمشة معالجة ومقاومة لتسرب المياه",
-      "جيوب وسحابات عالية المتانة مع تقسيم داخلي",
-      "سعة واسعة للكتب والدفاتر والأجهزة اللوحية"
-    ],
     rating: 5,
     reviewsCount: 120,
-    tags: ["حقائب", "لوازم مدرسية"]
+    tags: ["حقائب", "لوازم مدرسية", "حقائب مدرسية"]
   },
   {
     id: 2,
@@ -135,20 +128,11 @@ export const products: Product[] = [
     description: "أقلام تلوين خشبية ناعمة وسهلة الدمج، مثالية للرسم والتلوين المدرسي.",
     image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800",
     category: "اللوازم المدرسية",
+    subcategory: "🖍️ تلوين وأدوات رسم",
     colors: ["Noir", "Rouge", "Vert", "Bleu"],
-    styles: ["طراز قياسي", "طراز بريميوم", "طقم إضافي"],
-    sizes: ["حجم قياسي", "حجم كبير (XL)", "حجم مدمج"],
-    bulletPoints: [
-      "جودة كتابة ورسم فائقة السلاسة",
-      "ألوان زاهية ومقاومة للبهتان",
-      "خامات آمنة وغير سامة مطابقة للمواصفات",
-      "أدوات متينة ومقاومة للكسر العرضي",
-      "تصميم مريح للأيدي والأصابع",
-      "مثالي للطلبة في مختلف المراحل الدراسية"
-    ],
     rating: 5,
     reviewsCount: 65,
-    tags: ["أدوات مكتبية", "لوازم مدرسية"]
+    tags: ["أدوات مكتبية", "لوازم مدرسية", "تلوين"]
   },
   {
     id: 3,
@@ -157,52 +141,295 @@ export const products: Product[] = [
     price: 18.500,
     description: "دفتر ملاحظات بغلاف جلدي وورق عالي الجودة، مناسب للكتابة اليومية.",
     image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=800",
-    category: "اللوازم المدرسية"
+    category: "اللوازم المدرسية",
+    subcategory: "📘 دفاتر ملاحظات (Notes Book)",
+    tags: ["دفاتر", "ملاحظات"]
   },
   {
     id: 4,
     sku: "OXF-1004",
     name: "مقلمة مدرسية بتصميم عصري",
     price: 9.900,
-    description: "مقلمة واسعة تتسع لجميع الأدوات المكتبية بتصميم جذاب.",
+    description: "مقلمة واسعة تتسع لجميع الأدوات المكتبية بتصميم جذاب ومقاوم للماء.",
     image: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&q=80&w=800",
-    category: "حقائب وأمتعة"
+    category: "حقائب وأمتعة",
+    subcategory: "👝 مقالم",
+    tags: ["مقالم", "حقائب"]
   },
   {
     id: 5,
     sku: "OXF-1005",
     name: "مجموعة هندسية متكاملة",
     price: 15.000,
-    description: "طقم أدوات هندسية دقيق يحتوي على فرجار ومسطرة ومنقلة.",
+    description: "طقم أدوات هندسية دقيق يحتوي على فرجار ومسطرة ومنقلة وكوس.",
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800",
-    category: "اللوازم المدرسية"
+    category: "اللوازم المدرسية",
+    subcategory: "📐 مساطر وأدوات هندسية",
+    tags: ["هندسة", "مساطر"]
   },
   {
     id: 6,
     sku: "OXF-1006",
-    name: "ساعة ذكية للأطفال",
+    name: "ساعة ذكية للأطفال مع تتبع GPS",
     price: 149.000,
-    description: "ساعة ذكية مع تتبع GPS ومكالمات صوتية للأمان والترفيه.",
+    description: "ساعة ذكية مع تتبع GPS ومكالمات صوتية للأمان والترفيه للأطفال.",
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800",
-    category: "علوم الحاسوب"
+    category: "علوم الحاسوب",
+    subcategory: "⌚ ساعات ذكية وأدوات",
+    tags: ["ساعات", "إلكترونيات"]
   },
   {
     id: 7,
     sku: "OXF-1007",
-    name: "ألوان مائية احترافية",
+    name: "ألوان مائية احترافية 18 لون",
     price: 45.000,
-    description: "مجموعة ألوان مائية بجودة فنية عالية للرسامين والمبدعين.",
+    description: "مجموعة ألوان مائية بجودة فنية عالية للرسامين والمبدعين والطلبة.",
     image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800",
-    category: "الفنون الجميلة"
+    category: "الفنون الجميلة",
+    subcategory: "🎨 دهانات وألوان",
+    tags: ["فنون", "ألوان", "رسم"]
   },
   {
     id: 8,
     sku: "OXF-1008",
-    name: "مصباح مكتب LED",
+    name: "مصباح مكتب LED لحماية العين",
     price: 35.000,
-    description: "مصباح مكتب قابل للتعديل مع مستويات إضاءة متعددة لحماية العين.",
+    description: "مصباح مكتب قابل للتعديل مع مستويات إضاءة متعددة ومريح للقراءة.",
     image: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&q=80&w=800",
-    category: "أدوات مكتبية"
+    category: "أدوات مكتبية",
+    subcategory: "🕰️ إكسسوارات مكتبية",
+    tags: ["مكتب", "إكسسوارات"]
+  },
+  {
+    id: 9,
+    sku: "OXF-1009",
+    name: "حقيبة وجبات عازلة للحرارة",
+    price: 28.500,
+    description: "حقيبة طعام مدرسية عازلة للحرارة تحفظ الوجبات طازجة وصحية طوال اليوم.",
+    image: "https://images.unsplash.com/photo-1577705998148-6da4f3963bc8?auto=format&fit=crop&q=80&w=800",
+    category: "حقائب وأمتعة",
+    subcategory: "🥖 حقائب وجبات وصناديق طعام",
+    tags: ["وجبات", "حقائب"]
+  },
+  {
+    id: 10,
+    sku: "OXF-1010",
+    name: "زجاجة مياه رياضية استانلس ستيل",
+    price: 19.900,
+    description: "زجاجة مياه صحية ومقاومة للتسرب تحفظ البرودة حتى 24 ساعة.",
+    image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=800",
+    category: "حقائب وأمتعة",
+    subcategory: "💧 زجاجات مياه",
+    tags: ["مياه", "قارورة"]
+  },
+  {
+    id: 11,
+    sku: "OXF-1011",
+    name: "دباسة مكتبية معدنية متينة",
+    price: 14.500,
+    description: "دباسة مكتبية شديدة التحمل مع علبة دبابيس مجانية مناسبة للمكاتب والمدارس.",
+    image: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&q=80&w=800",
+    category: "أدوات مكتبية",
+    subcategory: "📎 دباسات، مشابك وتثبيت",
+    tags: ["دباسة", "مكتب"]
+  },
+  {
+    id: 12,
+    sku: "OXF-1012",
+    name: "آلة حاسبة علمية متطورة",
+    price: 42.000,
+    description: "آلة حاسبة علمية دقيقة لطلبة الإعدادي والثانوي والجامعات بـ 240 دالة رياضية.",
+    image: "https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?auto=format&fit=crop&q=80&w=800",
+    category: "أدوات مكتبية",
+    subcategory: "🔎 آلات حاسبة ومكبرات",
+    tags: ["حاسبة", "رياضيات"]
+  },
+  {
+    id: 13,
+    sku: "OXF-1013",
+    name: "لوح مغناطيسي أبيض للكتابة 60x40 سم",
+    price: 34.000,
+    description: "سبورة بيضاء مغناطيسية مع أقلام وممحاة لتنظيم المهام والملاحظات.",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800",
+    category: "أدوات مكتبية",
+    subcategory: "📋 لوحات وعرض",
+    tags: ["لوحات", "عرض", "سبورة"]
+  },
+  {
+    id: 14,
+    sku: "OXF-1014",
+    name: "طقم أقلام جافة زرقاء 10 أقلام",
+    price: 6.500,
+    description: "أقلام حبر جاف عالية الجودة وسلسة في الكتابة لا تقطع ومريحة لليد.",
+    image: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&q=80&w=800",
+    category: "اللوازم المدرسية",
+    subcategory: "🖊️ أقلام جافة",
+    tags: ["أقلام", "حبر"]
+  },
+  {
+    id: 15,
+    sku: "OXF-1015",
+    name: "مجموعة كراسات مدرسية 96 صفحة",
+    price: 18.000,
+    description: "طقم 5 كراسات مدرسية مسطرة ورق ممتاز ناصع البياض 80 غرام.",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800",
+    category: "اللوازم المدرسية",
+    subcategory: "📒 كراسات وأغلفة كراسات",
+    tags: ["كراسات", "دفاتر"]
+  },
+  {
+    id: 16,
+    sku: "OXF-1016",
+    name: "كتاب الأنشطة والتمارين للمرحلة الابتدائية",
+    price: 16.500,
+    description: "تمارين وأنشطة منهجية لدعم مهارات الحساب واللغات للسنوات الابتدائية.",
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800",
+    category: "الأنشطة اللامنهجية",
+    subcategory: "📚 مدرسة ابتدائية حكومية",
+    tags: ["ابتدائي", "أنشطة", "كتب"]
+  },
+  {
+    id: 17,
+    sku: "OXF-1017",
+    name: "سلسلة التحدي والتميز للإعدادي",
+    price: 22.000,
+    description: "ملخصات شاملة وتمارين نموذجية مع الحلول المفصلة لطلبة التعليم الإعدادي.",
+    image: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=800",
+    category: "الأنشطة اللامنهجية",
+    subcategory: "📚 إعدادي حكومي",
+    tags: ["إعدادي", "تمارين", "كتب"]
+  },
+  {
+    id: 18,
+    sku: "OXF-1018",
+    name: "قاموس أكسفورد المصور فرنسي-عربي",
+    price: 35.000,
+    description: "قاموس لغوي مصور ثنائي اللغة يدعم أكثر من 3000 كلمة ومصطلح مصور.",
+    image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=80&w=800",
+    category: "الأنشطة اللامنهجية",
+    subcategory: "📖 قواميس",
+    tags: ["قواميس", "فرنسي", "عربي"]
+  },
+  {
+    id: 19,
+    sku: "OXF-1019",
+    name: "رواية الأدب العالمي مترجمة بالعربية",
+    price: 24.000,
+    description: "طبعة أنيقة لرواية أدبية شهيرة بترجمة دقيقة وغلاف فاخر.",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800",
+    category: "الكتب",
+    subcategory: "📕 كتب عربية",
+    tags: ["روايات", "كتب", "أدب"]
+  },
+  {
+    id: 20,
+    sku: "OXF-1020",
+    name: "موسوعة المعارف والعلوم المصورة",
+    price: 38.000,
+    description: "موسوعة علمية غنية بالصور والرسومات التوضيحية المشوقة للناشئة.",
+    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=800",
+    category: "الكتب",
+    subcategory: "📘 كتب فرنسية",
+    tags: ["موسوعة", "علوم", "كتب"]
+  },
+  {
+    id: 21,
+    sku: "OXF-1021",
+    name: "المصحف الشريف بتجويد ملون وتفسير ميسر",
+    price: 29.000,
+    description: "مصحف كريم بحجم مناسب مع ترميز لوني لأحكام التجويد وتفسير على الهامش.",
+    image: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&q=80&w=800",
+    category: "الكتب",
+    subcategory: "📗 كتب دينية",
+    tags: ["مصحف", "ديني", "كتب"]
+  },
+  {
+    id: 22,
+    sku: "OXF-1022",
+    name: "ماوس لاسلكي مريح مع لوحة ماوس طبية",
+    price: 26.500,
+    description: "ماوس لاسلكي صامت بتصميم مريح لليد مع وسادة دعم للمعصم.",
+    image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&q=80&w=800",
+    category: "علوم الحاسوب",
+    subcategory: "🖱️ ماوس ولوحات ماوس",
+    tags: ["ماوس", "حاسوب"]
+  },
+  {
+    id: 23,
+    sku: "OXF-1023",
+    name: "سماعات رأس تعليمية مع ميكروفون مدمج",
+    price: 49.000,
+    description: "سماعات رأس خفيفة ومريحة مع عزل للضوضاء مثالية للدراسة والاجتماعات.",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800",
+    category: "علوم الحاسوب",
+    subcategory: "🎧 سماعات رأس وسماعات أذن",
+    tags: ["سماعات", "صوت"]
+  },
+  {
+    id: 24,
+    sku: "OXF-1024",
+    name: "مجموعة ألعاب ذكاء وتركيب للأطفال",
+    price: 39.000,
+    description: "لعبة تركيب إبداعية لتطوير المهارات الهندسية والتفكير المنطقي للصغار.",
+    image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&q=80&w=800",
+    category: "ألعاب",
+    subcategory: "🧸 ألعاب",
+    tags: ["ألعاب", "ذكاء", "تركيب"]
+  },
+  {
+    id: 25,
+    sku: "OXF-1025",
+    name: "لعبة شطرنج خشبية فاخرة قابلة للطي",
+    price: 45.000,
+    description: "طقم شطرنج مصنوع من الخشب الطبيعي المصقول مع قطع منحوتة بدقة.",
+    image: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&q=80&w=800",
+    category: "ألعاب",
+    subcategory: "🧸 ألعاب",
+    tags: ["شطرنج", "ألعاب"]
+  },
+  {
+    id: 26,
+    sku: "OXF-1026",
+    name: "كراسة رسم احترافية كانسون 300 غرام",
+    price: 28.000,
+    description: "ورق رسم مائي عالي الجودة قطني الملمس مناسب لجميع تقنيات الرسم.",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800",
+    category: "الفنون الجميلة",
+    subcategory: "📓 دفاتر رسم (Sketchbook)",
+    tags: ["رسم", "كانسون", "فنون"]
+  },
+  {
+    id: 27,
+    sku: "OXF-1027",
+    name: "طقم فرش رسم فنية متعددة الأحجام 12 فرشاة",
+    price: 21.500,
+    description: "فرش رسم ناعمة من شعر السنجاب الصناعي للألوان المائية والزيتية والأكريليك.",
+    image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800",
+    category: "الفنون الجميلة",
+    subcategory: "🖌️ فرش رسم",
+    tags: ["فرش", "رسم", "فنون"]
+  },
+  {
+    id: 28,
+    sku: "OXF-1028",
+    name: "فانوس رمضان معدني مضيء بتصميم تقليدي",
+    price: 32.000,
+    description: "فانوس رمضاني بنقوش إسلامية وزجاج ملون مع إضاءة دافئة مبهجة.",
+    image: "https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&q=80&w=800",
+    category: "رمضان",
+    subcategory: "🌙 زينة رمضان",
+    tags: ["رمضان", "فانوس", "زينة"]
+  },
+  {
+    id: 29,
+    sku: "OXF-1029",
+    name: "حبل إضاءة وزينة رمضانية نجوم وهلال LED",
+    price: 19.500,
+    description: "سلسلة أضواء رمضانية أنيقة بأشكال النجوم والهلال لتزيين المنزل.",
+    image: "https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&q=80&w=800",
+    category: "رمضان",
+    subcategory: "🌙 زينة رمضان",
+    tags: ["رمضان", "إضاءة", "زينة"]
   }
 ];
 

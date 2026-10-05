@@ -7,6 +7,7 @@ import { Product } from '../types';
 import { productService } from '../services/productService';
 import QuickOrderModal from '../components/QuickOrderModal';
 import ProductReviews from '../components/ProductReviews';
+import ProductCard from '../components/ProductCard';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -27,8 +28,8 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isCompared, setIsCompared] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>('Noir');
-  const [selectedStyle, setSelectedStyle] = useState<string>('طقم إضافي');
-  const [selectedSize, setSelectedSize] = useState<string>('حجم مدمج');
+  const [selectedStyle, setSelectedStyle] = useState<string>('');
+  const [selectedSize, setSelectedSize] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'specs' | 'features' | 'reviews'>('specs');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
@@ -141,6 +142,25 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
     }
   };
 
+  const stylesList = useMemo(() => {
+    if (product?.styles && Array.isArray(product.styles)) {
+      const filtered = product.styles.map(s => String(s || '').trim()).filter(Boolean);
+      if (filtered.length > 0) return filtered;
+    }
+    return [];
+  }, [product]);
+
+  const sizesList = useMemo(() => {
+    if (product?.sizes && Array.isArray(product.sizes)) {
+      const filtered = product.sizes.map(s => String(s || '').trim()).filter(Boolean);
+      if (filtered.length > 0) return filtered;
+    }
+    if (product?.size && String(product.size).trim()) {
+      return [String(product.size).trim()];
+    }
+    return [];
+  }, [product]);
+
   React.useEffect(() => {
     if (product) {
       if (product.colors && product.colors.length > 0) {
@@ -149,23 +169,19 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
         setSelectedColor('Noir');
       }
 
-      if (product.styles && product.styles.length > 0) {
-        setSelectedStyle(product.styles[0]);
-      } else if (product.productType) {
-        setSelectedStyle(product.productType);
+      if (stylesList.length > 0) {
+        setSelectedStyle(stylesList[0]);
       } else {
-        setSelectedStyle('طقم إضافي');
+        setSelectedStyle('');
       }
 
-      if (product.sizes && product.sizes.length > 0) {
-        setSelectedSize(product.sizes[0]);
-      } else if (product.size) {
-        setSelectedSize(product.size);
+      if (sizesList.length > 0) {
+        setSelectedSize(sizesList[0]);
       } else {
-        setSelectedSize('حجم مدمج');
+        setSelectedSize('');
       }
     }
-  }, [product]);
+  }, [product, stylesList, sizesList]);
 
   const bulletPoints = useMemo(() => {
     if (product?.bulletPoints && product.bulletPoints.length > 0) {
@@ -193,23 +209,6 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
       return product.colors;
     }
     return ['Noir', 'Rouge', 'Vert', 'Bleu'];
-  }, [product]);
-
-  const stylesList = useMemo(() => {
-    if (product?.styles && product.styles.length > 0) {
-      return product.styles;
-    }
-    return ['طراز قياسي', 'طراز بريميوم', 'طقم إضافي'];
-  }, [product]);
-
-  const sizesList = useMemo(() => {
-    if (product?.sizes && product.sizes.length > 0) {
-      return product.sizes;
-    }
-    if (product?.size) {
-      return [product.size, 'حجم كبير (XL)', 'حجم مدمج'].filter((v, i, a) => a.indexOf(v) === i);
-    }
-    return ['حجم قياسي', 'حجم كبير (XL)', 'حجم مدمج'];
   }, [product]);
 
   const getColorHex = (colorName: string): string => {
@@ -254,16 +253,29 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
     return brands.find(b => b.name === product?.brand);
   }, [product?.brand]);
 
-  React.useEffect(() => {
-    if (product) {
-      setActiveImage(product.image);
-    }
+  const defaultFallbackImage = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800';
+
+  const productMainImage = useMemo(() => {
+    if (!product) return defaultFallbackImage;
+    return (product.image && typeof product.image === 'string' && product.image.trim() !== '')
+      ? product.image.trim()
+      : defaultFallbackImage;
   }, [product]);
 
+  React.useEffect(() => {
+    if (product) {
+      setActiveImage(productMainImage);
+    }
+  }, [product, productMainImage]);
+
   const images = useMemo(() => {
-    if (!product) return [];
-    return product.images && product.images.length > 0 ? product.images : [product.image];
-  }, [product]);
+    if (!product) return [defaultFallbackImage];
+    const valid = Array.isArray(product.images)
+      ? product.images.filter(img => typeof img === 'string' && img.trim() !== '')
+      : [];
+    if (valid.length > 0) return valid;
+    return [productMainImage];
+  }, [product, productMainImage]);
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
@@ -285,56 +297,38 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
   }
 
   return (
-    <div className="bg-white min-h-screen pb-24">
+    <div className="bg-gradient-to-b from-[#F8FAFC] via-[#F4F6FB] to-[#F1F5F9] min-h-screen pb-24 text-stone-900">
       {/* Breadcrumbs */}
-      <div className="bg-stone-50 border-b border-stone-100 py-2">
+      <div className="bg-white/90 backdrop-blur-xs border-b border-slate-200/90 py-2.5 shadow-2xs">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-2 text-stone-500 text-sm font-bold">
-            <Link to="/" className="hover:text-oxford-blue transition-colors">الرئيسية</Link>
-            <ChevronLeft size={16} />
-            <Link to={`/category/${product.category}`} className="hover:text-oxford-blue transition-colors">{product.category}</Link>
-            <ChevronLeft size={16} />
-            <span className="text-oxford-blue truncate">{product.name}</span>
+          <nav className="flex items-center gap-2 text-stone-500 text-xs sm:text-sm font-bold">
+            <Link to="/" className="hover:text-[#5794ff] transition-colors">الرئيسية</Link>
+            <ChevronLeft size={14} className="text-blue-300" />
+            <Link to={`/category/${product.category}`} className="hover:text-[#5794ff] transition-colors">{product.category}</Link>
+            <ChevronLeft size={14} className="text-blue-300" />
+            <span className="text-[#5794ff] font-black truncate">{product.name}</span>
           </nav>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 lg:px-10 py-6 sm:py-8">
-        <div className="grid grid-cols-1 md:grid-cols-[360px_1fr] lg:grid-cols-[400px_1fr] gap-8 lg:gap-12 items-start">
-          {/* Product Image Section */}
-          <div className="flex gap-3 max-w-[400px] mx-auto md:mx-0 w-full relative">
-            {/* Thumbnail Gallery (Vertical on the right) */}
-            {images.length > 1 && (
-              <div className="flex flex-col gap-2 w-14 sm:w-16 flex-shrink-0">
-                {images.map((img, i) => (
-                  <div 
-                    key={i} 
-                    onClick={() => setActiveImage(img)}
-                    className={cn(
-                      "aspect-square rounded-xl overflow-hidden border-2 transition-all cursor-pointer bg-stone-50",
-                      (activeImage === img || (!activeImage && i === 0)) ? "border-oxford-red shadow-xs" : "border-transparent hover:border-stone-200"
-                    )}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Main Image */}
-            <div className="flex-1 min-w-0 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[480px_1fr] xl:grid-cols-[520px_1fr] gap-6 md:gap-8 lg:gap-12 items-start">
+          {/* Product Image & Thumbnails Section (Stacked Vertically with Thumbnails at Bottom) */}
+          <div className="flex flex-col gap-3.5 w-full relative">
+            {/* Main Image Box - Enlarged & Sharpened */}
+            <div className="w-full relative">
               <motion.div 
                 key={activeImage}
-                initial={{ opacity: 0, scale: 0.96 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 onMouseEnter={() => setIsZooming(true)}
                 onMouseLeave={() => setIsZooming(false)}
                 onMouseMove={handleMouseMove}
                 onClick={() => setIsLightboxOpen(true)}
-                className="aspect-square max-h-[380px] rounded-2xl overflow-hidden bg-stone-50 border border-stone-200/90 shadow-xs relative group cursor-crosshair select-none"
+                className="aspect-square w-full rounded-xs overflow-hidden bg-white border border-slate-300 shadow-xs relative group cursor-crosshair select-none"
               >
                 <img 
-                  src={activeImage || product.image} 
+                  src={(activeImage && activeImage.trim()) || productMainImage} 
                   alt={product.name} 
                   className="w-full h-full object-cover transition-transform duration-300"
                   referrerPolicy="no-referrer"
@@ -343,10 +337,10 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                 {/* Interactive Zoom Lens */}
                 {isZooming && (
                   <div 
-                    className="zoomLens absolute pointer-events-none border-2 border-oxford-blue/50 bg-oxford-blue/15 backdrop-blur-[0.5px] rounded-lg shadow-md z-20 transition-opacity duration-150"
+                    className="zoomLens absolute pointer-events-none border-2 border-[#5794ff] bg-[#5794ff]/15 backdrop-blur-[0.5px] rounded-xs shadow-md z-20 transition-opacity duration-150"
                     style={{
-                      width: 110,
-                      height: 110,
+                      width: 120,
+                      height: 120,
                       top: `${lensPos.top}px`,
                       left: `${lensPos.left}px`,
                     }}
@@ -360,27 +354,27 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                     e.stopPropagation();
                     setIsLightboxOpen(true);
                   }}
-                  className="absolute bottom-2.5 start-2.5 z-20 h-7 px-2 rounded-md bg-white/95 backdrop-blur-md border border-stone-200/80 text-stone-700 hover:text-oxford-red hover:bg-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm transition-all"
+                  className="absolute bottom-3 start-3 z-20 h-8 px-3 rounded-xs bg-white/95 backdrop-blur-md border border-slate-300 text-stone-800 hover:text-[#5794ff] hover:bg-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
                   title="تكبير الصورة كاملة"
                 >
-                  <Maximize2 size={13} />
-                  <span>تكبير</span>
+                  <Maximize2 size={14} />
+                  <span>تكبير الصورة</span>
                 </button>
 
                 {/* Hover zoom hint */}
-                <div className="absolute top-2.5 end-2.5 z-20 px-2 py-0.5 rounded-md bg-stone-900/60 backdrop-blur-md text-white text-[10px] font-medium flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  <ZoomIn size={11} className="text-amber-400" />
+                <div className="absolute top-3 end-3 z-20 px-3 py-1 rounded-xs bg-[#5794ff]/90 backdrop-blur-md text-white border border-white/30 text-[11px] font-bold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-sm">
+                  <ZoomIn size={13} className="text-white" />
                   <span>حرّك الماوس للتكبير</span>
                 </div>
               </motion.div>
 
-              {/* zoomWindowContainer: Magnified view container placed beside image */}
+              {/* zoomWindowContainer: Magnified view container placed beside image (Only on large screens) */}
               {isZooming && (
                 <div 
-                  className="zoomWindowContainer hidden md:block absolute top-0 start-full ms-6 z-50 rounded-2xl overflow-hidden border-2 border-stone-200/90 bg-white shadow-2xl pointer-events-none"
+                  className="zoomWindowContainer hidden xl:block absolute top-0 start-full ms-6 z-50 rounded-xs overflow-hidden border-2 border-[#5794ff] bg-white shadow-2xl pointer-events-none"
                   style={{
-                    width: '420px',
-                    height: '380px',
+                    width: '480px',
+                    height: '480px',
                   }}
                 >
                   <div 
@@ -388,21 +382,42 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                     style={{
                       backgroundImage: `url(${activeImage || product.image})`,
                       backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
-                      backgroundSize: '270%',
+                      backgroundSize: '280%',
                     }}
                   />
-                  <div className="absolute bottom-2.5 start-2.5 px-2.5 py-1 rounded-md bg-stone-900/80 backdrop-blur-md text-white text-[10px] font-bold flex items-center gap-1.5">
-                    <ZoomIn size={12} className="text-oxford-red" />
-                    <span>تكبير فائق 2.7x</span>
+                  <div className="absolute bottom-3 start-3 px-3 py-1 rounded-md bg-[#5794ff] text-white text-xs font-bold flex items-center gap-1.5 border border-white/30 shadow-md">
+                    <ZoomIn size={13} className="text-white" />
+                    <span>تكبير فائق 2.8x</span>
                   </div>
                 </div>
               )}
             </div>
+
+            {/* Thumbnail Gallery (Moved to Bottom Below Main Image) */}
+            {images.length > 1 && (
+              <div className="flex items-center gap-2.5 overflow-x-auto pb-2 custom-scrollbar w-full">
+                {images.map((img, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setActiveImage(img)}
+                    className={cn(
+                      "w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-md overflow-hidden border-2 transition-all cursor-pointer bg-white p-0.5 shadow-2xs",
+                      (activeImage === img || (!activeImage && i === 0))
+                        ? "border-[#5794ff] ring-2 ring-[#5794ff]/40 shadow-sm scale-102"
+                        : "border-slate-200 hover:border-[#5794ff]/70 opacity-70 hover:opacity-100"
+                    )}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover rounded-xs" referrerPolicy="no-referrer" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Info Section */}
           <div className="flex flex-col h-full col-lg-7">
-            <h1 className="text-2xl lg:text-3xl font-black text-black mb-3 leading-tight">
+            <h1 className="text-2xl lg:text-3xl font-extrabold text-stone-900 mb-3 leading-tight tracking-tight">
               {product.name}
             </h1>
             
@@ -410,15 +425,15 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-stone-500">
                   <span>من</span>
-                  <Link className="text-black font-extrabold hover:text-oxford-blue transition-colors" to="/">
-                    {product.brand || 'أكسفورد سيتي'}
+                  <Link className="text-[#5794ff] font-extrabold hover:underline transition-colors" to="/">
+                    {product.brand || 'مكتبة الهدى'}
                   </Link>
                 </div>
-                <div className="h-3 w-px bg-stone-300"></div>
+                <div className="h-3 w-px bg-stone-200"></div>
                 <div className="flex items-center gap-1.5">
-                  <div className="flex text-amber-400">
+                  <div className="flex text-[#D4AF37]">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={14} className="fill-current text-amber-400" />
+                      <Star key={i} size={14} className="fill-current text-[#D4AF37]" />
                     ))}
                   </div>
                   <span className="text-xs font-bold text-stone-500">({product.reviewsCount || 65} تقييمًا)</span>
@@ -429,29 +444,29 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                 <button 
                   type="button" 
                   onClick={toggleWishlist}
-                  className="flex items-center gap-1.5 transition-colors cursor-pointer text-stone-700 hover:text-oxford-red"
+                  className="flex items-center gap-1.5 transition-colors cursor-pointer text-stone-700 hover:text-[#5794ff]"
                 >
-                  <Heart size={15} className={isWishlisted ? "fill-current text-oxford-red" : "text-stone-500"} />
+                  <Heart size={15} className={isWishlisted ? "fill-current text-rose-500" : "text-stone-400"} />
                   <span>{isWishlisted ? 'في قائمة الأمنيات' : 'أضف إلى قائمة الأمنيات'}</span>
                 </button>
-                <div className="h-3 w-px bg-stone-300"></div>
+                <div className="h-3 w-px bg-stone-200"></div>
                 <button 
                   type="button" 
                   onClick={handleCompare}
-                  className="flex items-center gap-1.5 transition-colors cursor-pointer text-stone-700 hover:text-oxford-blue"
+                  className="flex items-center gap-1.5 transition-colors cursor-pointer text-stone-700 hover:text-[#5794ff]"
                 >
-                  <Scale size={15} className={isCompared ? "text-oxford-blue" : "text-stone-500"} />
+                  <Scale size={15} className={isCompared ? "text-[#5794ff]" : "text-stone-400"} />
                   <span>{isCompared ? 'تمت إضافة المقارنة' : 'أضف إلى المقارنة'}</span>
                 </button>
               </div>
             </div>
 
-            <div className="border-b border-stone-200 mb-4"></div>
+            <div className="border-b border-slate-200/80 mb-4"></div>
 
             {/* Price Box */}
-            <div className="box-product-price flex items-baseline gap-3 mb-4">
-              <span className="text-3xl font-black text-oxford-red price-main">
-                {(Number(product.price) || 0).toFixed(3)} <span className="text-base font-bold">د.ت</span>
+            <div className="box-product-price flex items-baseline gap-3 mb-4 p-4 rounded-xs bg-white border border-slate-200/90 shadow-2xs">
+              <span className="text-3xl font-black text-red-600 price-main tracking-tight">
+                {(Number(product.price) || 0).toFixed(3)} <span className="text-base font-bold text-red-600">د.ت</span>
               </span>
               {Number(oldPrice) > (Number(product.price) || 0) && (
                 <span className="text-lg text-stone-400 line-through font-bold price-line">
@@ -459,16 +474,16 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                 </span>
               )}
               {product.minPrice !== undefined && product.maxPrice !== undefined && (
-                <span className="text-xs font-bold bg-stone-100 text-stone-700 px-2.5 py-1 rounded-md border border-stone-200 ms-auto">
+                <span className="text-xs font-bold bg-red-50 text-red-600 px-3 py-1 rounded-full border border-red-200/60 ms-auto">
                   النطاق: {(Number(product.minPrice) || 0).toFixed(3)} د.ت إلى {(Number(product.maxPrice) || 0).toFixed(3)} د.ت
                 </span>
               )}
             </div>
 
             {/* Description & Bullet points */}
-            <div className="product-description mb-5 text-black">
+            <div className="product-description mb-5 text-stone-700">
               {product.description && (
-                <p className="text-sm sm:text-base font-medium leading-relaxed mb-4 text-black">
+                <p className="text-sm sm:text-base font-medium leading-relaxed mb-4 text-stone-700">
                   {product.description}
                 </p>
               )}
@@ -488,8 +503,8 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
 
             {/* Colors */}
             <div className="box-product-color mb-5">
-              <p className="text-sm font-bold text-black mb-2">
-                اللون: <span className="text-oxford-blue font-extrabold nameColor">{selectedColor}</span>
+              <p className="text-sm font-bold text-stone-800 mb-2">
+                اللون: <span className="text-[#5794ff] font-extrabold nameColor">{selectedColor}</span>
               </p>
               <ul className="list-colors">
                 {colorsList.map((colorName, idx) => {
@@ -513,60 +528,69 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
             </div>
 
             {/* Style and Size */}
-            <div className="box-product-style-size mb-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-bold text-black mb-2">
-                    النمط: <span className="text-oxford-blue font-extrabold nameStyle">{selectedStyle}</span>
-                  </p>
-                  <ul className="list-styles">
-                    {stylesList.map((st, idx) => (
-                      <li 
-                        key={idx} 
-                        className={selectedStyle === st ? "active" : ""} 
-                        title={st}
-                        onClick={() => setSelectedStyle(st)}
-                      >
-                        {st}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-black mb-2">
-                    الحجم: <span className="text-oxford-blue font-extrabold nameSize">{selectedSize}</span>
-                  </p>
-                  <ul className="list-sizes">
-                    {sizesList.map((sz, idx) => (
-                      <li 
-                        key={idx} 
-                        className={selectedSize === sz ? "active" : ""} 
-                        title={sz}
-                        onClick={() => setSelectedSize(sz)}
-                      >
-                        {sz}
-                      </li>
-                    ))}
-                  </ul>
+            {(stylesList.length > 0 || sizesList.length > 0) && (
+              <div className="box-product-style-size mb-5">
+                <div className={cn(
+                  "grid gap-4",
+                  stylesList.length > 0 && sizesList.length > 0 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+                )}>
+                  {stylesList.length > 0 && (
+                    <div>
+                      <p className="text-sm font-bold text-stone-800 mb-2">
+                        النمط: <span className="text-[#5794ff] font-extrabold nameStyle">{selectedStyle}</span>
+                      </p>
+                      <ul className="list-styles">
+                        {stylesList.map((st, idx) => (
+                          <li 
+                            key={idx} 
+                            className={selectedStyle === st ? "active" : ""} 
+                            title={st}
+                            onClick={() => setSelectedStyle(st)}
+                          >
+                            {st}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {sizesList.length > 0 && (
+                    <div>
+                      <p className="text-sm font-bold text-stone-800 mb-2">
+                        الحجم: <span className="text-[#5794ff] font-extrabold nameSize">{selectedSize}</span>
+                      </p>
+                      <ul className="list-sizes">
+                        {sizesList.map((sz, idx) => (
+                          <li 
+                            key={idx} 
+                            className={selectedSize === sz ? "active" : ""} 
+                            title={sz}
+                            onClick={() => setSelectedSize(sz)}
+                          >
+                            {sz}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Buy and Quantity section */}
-            <div className="buy-product mt-3 pt-4 border-t border-stone-200">
-              <p className="text-xs font-bold text-stone-600 mb-2">كمية</p>
+            <div className="buy-product mt-3 pt-4 border-t border-slate-200/80">
+              <p className="text-xs font-bold text-stone-600 mb-2">الكمية</p>
               <div className="box-quantity flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
-                <div className="input-quantity flex items-center h-11 border border-stone-300 rounded-lg bg-white overflow-hidden w-32 flex-shrink-0 shadow-2xs">
+                <div className="input-quantity flex items-center h-11 border border-slate-200 rounded-md bg-white overflow-hidden w-32 flex-shrink-0 shadow-2xs">
                   <button 
                     type="button" 
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="minus-cart w-10 h-full flex items-center justify-center text-stone-600 hover:bg-stone-100 transition-colors cursor-pointer"
+                    className="minus-cart w-10 h-full flex items-center justify-center text-stone-600 hover:bg-slate-50 hover:text-[#5794ff] transition-colors cursor-pointer"
                   >
                     <Minus size={16} />
                   </button>
                   <input 
                     min="1" 
-                    className="w-full h-full text-center font-black text-black border-none focus:outline-none text-base" 
+                    className="w-full h-full text-center font-black text-stone-900 border-none focus:outline-none text-base" 
                     type="number" 
                     value={quantity}
                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
@@ -574,7 +598,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   <button 
                     type="button" 
                     onClick={() => setQuantity(q => q + 1)}
-                    className="plus-cart w-10 h-full flex items-center justify-center text-stone-600 hover:bg-stone-100 transition-colors cursor-pointer"
+                    className="plus-cart w-10 h-full flex items-center justify-center text-stone-600 hover:bg-slate-50 hover:text-[#5794ff] transition-colors cursor-pointer"
                   >
                     <Plus size={16} />
                   </button>
@@ -583,7 +607,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   <button 
                     type="button" 
                     onClick={handleAddToCart}
-                    className="btn btn-cart w-full"
+                    className="h-11 rounded-md bg-[#5794ff] hover:bg-[#4686f5] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
                   >
                     <ShoppingCart size={17} />
                     <span>{isAdding ? 'جارٍ الإضافة...' : 'أضف إلى السلة'}</span>
@@ -591,7 +615,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   <button 
                     type="button" 
                     onClick={handleBuyNow}
-                    className="btn btn-buy w-full"
+                    className="h-11 rounded-md bg-gradient-to-r from-[#DFB15B] via-[#D4AF37] to-[#B8860B] hover:brightness-105 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-950/20 transition-all cursor-pointer"
                   >
                     <CreditCard size={17} />
                     <span>اشتري الآن</span>
@@ -602,14 +626,14 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
 
             {/* Feedback toast */}
             {toastMessage && (
-              <div className="mt-4 bg-oxford-blue text-white text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between shadow-xs">
+              <div className="mt-4 bg-[#5794ff] text-white text-xs font-bold py-2.5 px-4 rounded-md flex items-center justify-between shadow-md">
                 <span>{toastMessage}</span>
-                <CheckCircle size={15} className="text-emerald-400" />
+                <CheckCircle size={16} className="text-white" />
               </div>
             )}
 
             {/* Info product meta */}
-            <div className="info-product mt-7 pt-5 border-t border-stone-200">
+            <div className="info-product mt-7 pt-5 border-t border-slate-200/80">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-stone-600">
                 <div className="space-y-1.5 font-medium">
                   <div>
@@ -618,7 +642,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   </div>
                   <div>
                     <span className="font-bold text-black">التصنيف: </span>
-                    <Link className="text-stone-500 hover:text-oxford-blue transition-colors" to={`/category/${product.category}`}>
+                    <Link className="text-stone-500 hover:text-[#B8860B] transition-colors" to={`/category/${product.category}`}>
                       {product.category}
                     </Link>
                   </div>
@@ -630,7 +654,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   </div>
                 </div>
 
-                <div className="space-y-1.5 font-medium border-t md:border-t-0 md:border-r md:border-stone-200 md:pr-6 pt-4 md:pt-0">
+                <div className="space-y-1.5 font-medium border-t md:border-t-0 md:border-r md:border-slate-200 md:pr-6 pt-4 md:pt-0">
                   <div className="font-bold text-black flex items-center gap-1.5">
                     <Truck size={15} className="text-emerald-600" />
                     <span>خدمة التوصيل مجانية</span>
@@ -638,13 +662,13 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   <div className="text-stone-500">لجميع المناطق والولايات عند الطلب بأكثر من 100 د.ت.</div>
                   <div 
                     onClick={() => setToastMessage('توصيل سريع خلال 24-48 ساعة لكافة مناطق الجمهورية التونسية 🚚')}
-                    className="text-oxford-blue hover:underline cursor-pointer font-bold"
+                    className="text-[#B8860B] hover:underline cursor-pointer font-bold"
                   >
                     خيارات ومعلومات التوصيل.
                   </div>
                 </div>
 
-                <div className="space-y-2 border-t md:border-t-0 md:border-r md:border-stone-200 md:pr-6 pt-4 md:pt-0">
+                <div className="space-y-2 border-t md:border-t-0 md:border-r md:border-slate-200 md:pr-6 pt-4 md:pt-0">
                   <div className="share-link flex flex-col gap-2">
                     <span className="font-bold text-black block">يشارك:</span>
                     <div className="flex items-center gap-2">
@@ -687,7 +711,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                       <button 
                         type="button" 
                         onClick={copyLink}
-                        className="w-8 h-8 rounded-full bg-stone-100 hover:bg-oxford-blue text-stone-600 hover:text-white flex items-center justify-center transition-all shadow-2xs hover:-translate-y-0.5 cursor-pointer" 
+                        className="w-8 h-8 rounded-full bg-stone-100 hover:bg-[#5794ff] text-stone-600 hover:text-white flex items-center justify-center transition-all shadow-2xs hover:-translate-y-0.5 cursor-pointer" 
                         title="نسخ الرابط"
                       >
                         <Share2 size={15} />
@@ -702,17 +726,17 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
 
         {/* Product Details Tabs: المواصفات التقنية, ميزات المنتج, تقييمات وآراء العملاء */}
         <div className="mt-12">
-          <div className="border-b border-stone-200">
+          <div className="border-b border-slate-200">
             <ul className="nav nav-tabs flex flex-wrap -mb-px text-sm sm:text-base font-bold text-center gap-1 sm:gap-2">
               <li className="nav-item">
                 <button
                   type="button"
                   onClick={() => setActiveTab('specs')}
                   className={cn(
-                    "nav-link inline-flex items-center gap-2 py-3 px-4 sm:px-6 rounded-t-lg border-b-2 transition-all cursor-pointer",
+                    "nav-link inline-flex items-center gap-2 py-3 px-5 sm:px-6 rounded-t-xl border-b-2 transition-all cursor-pointer font-bold",
                     activeTab === 'specs'
-                      ? "border-oxford-red text-oxford-red bg-stone-50/70 font-black shadow-2xs"
-                      : "border-transparent text-stone-600 hover:text-stone-900 hover:border-stone-300"
+                      ? "border-[#5794ff] text-[#5794ff] bg-white shadow-xs font-black"
+                      : "border-transparent text-stone-600 hover:text-[#5794ff] hover:border-slate-300"
                   )}
                 >
                   <span>المواصفات التقنية</span>
@@ -723,10 +747,10 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   type="button"
                   onClick={() => setActiveTab('features')}
                   className={cn(
-                    "nav-link inline-flex items-center gap-2 py-3 px-4 sm:px-6 rounded-t-lg border-b-2 transition-all cursor-pointer",
+                    "nav-link inline-flex items-center gap-2 py-3 px-5 sm:px-6 rounded-t-xl border-b-2 transition-all cursor-pointer font-bold",
                     activeTab === 'features'
-                      ? "border-oxford-red text-oxford-red bg-stone-50/70 font-black shadow-2xs"
-                      : "border-transparent text-stone-600 hover:text-stone-900 hover:border-stone-300"
+                      ? "border-[#5794ff] text-[#5794ff] bg-white shadow-xs font-black"
+                      : "border-transparent text-stone-600 hover:text-[#5794ff] hover:border-slate-300"
                   )}
                 >
                   <span>ميزات المنتج</span>
@@ -737,10 +761,10 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   type="button"
                   onClick={() => setActiveTab('reviews')}
                   className={cn(
-                    "nav-link inline-flex items-center gap-2 py-3 px-4 sm:px-6 rounded-t-lg border-b-2 transition-all cursor-pointer",
+                    "nav-link inline-flex items-center gap-2 py-3 px-5 sm:px-6 rounded-t-md border-b-2 transition-all cursor-pointer font-bold",
                     activeTab === 'reviews'
-                      ? "border-oxford-red text-oxford-red bg-stone-50/70 font-black shadow-2xs"
-                      : "border-transparent text-stone-600 hover:text-stone-900 hover:border-stone-300"
+                      ? "border-[#5794ff] text-[#5794ff] bg-white shadow-xs font-black"
+                      : "border-transparent text-stone-600 hover:text-[#5794ff] hover:border-slate-300"
                   )}
                 >
                   <span>تقييمات وآراء العملاء</span>
@@ -752,75 +776,75 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
           {/* Tab Panes */}
           <div className="py-6">
             {activeTab === 'specs' && (
-              <div className="bg-white rounded-xl overflow-hidden border border-stone-200/80 shadow-2xs max-w-4xl">
+              <div className="bg-white rounded-md overflow-hidden border border-slate-200/90 shadow-xs max-w-4xl">
                 <div className="overflow-x-auto">
                   <table className="w-full text-right text-sm">
-                    <tbody className="divide-y divide-stone-100">
-                      <tr className="hover:bg-stone-50/40 transition-colors">
-                        <td className="px-6 py-2.5 text-stone-600 font-bold w-1/3">الفئة</td>
-                        <td className="px-6 py-2.5 text-oxford-blue font-black">{product.category}</td>
+                    <tbody className="divide-y divide-slate-100">
+                      <tr className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-3 text-stone-600 font-bold w-1/3">الفئة</td>
+                        <td className="px-6 py-3 text-slate-900 font-black">{product.category}</td>
                       </tr>
                       {product.brand && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">العلامة التجارية</td>
-                          <td className="px-6 py-2.5 text-oxford-blue font-black">{product.brand}</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">العلامة التجارية</td>
+                          <td className="px-6 py-3 text-slate-900 font-black">{product.brand}</td>
                         </tr>
                       )}
                       {product.productType && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">نوع المنتج</td>
-                          <td className="px-6 py-2.5 text-oxford-blue font-black">{product.productType}</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">نوع المنتج</td>
+                          <td className="px-6 py-3 text-slate-900 font-black">{product.productType}</td>
                         </tr>
                       )}
                       {product.size && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">النوع / الحجم</td>
-                          <td className="px-6 py-2.5 text-oxford-blue font-black">{product.size}</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">النوع / الحجم</td>
+                          <td className="px-6 py-3 text-slate-900 font-black">{product.size}</td>
                         </tr>
                       )}
                       {product.minPrice !== undefined && Number(product.minPrice) > 0 && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">السعر الأدنى</td>
-                          <td className="px-6 py-2.5 text-oxford-blue font-black">{(Number(product.minPrice) || 0).toFixed(3)} د.ت</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">السعر الأدنى</td>
+                          <td className="px-6 py-3 text-[#5794ff] font-black">{(Number(product.minPrice) || 0).toFixed(3)} د.ت</td>
                         </tr>
                       )}
                       {product.maxPrice !== undefined && Number(product.maxPrice) > 0 && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">السعر الأقصى</td>
-                          <td className="px-6 py-2.5 text-oxford-blue font-black">{(Number(product.maxPrice) || 0).toFixed(3)} د.ت</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">السعر الأقصى</td>
+                          <td className="px-6 py-3 text-[#5794ff] font-black">{(Number(product.maxPrice) || 0).toFixed(3)} د.ت</td>
                         </tr>
                       )}
                       {product.notes && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">ملاحظات</td>
-                          <td className="px-6 py-2.5 text-stone-800 font-medium">{product.notes}</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">ملاحظات</td>
+                          <td className="px-6 py-3 text-stone-800 font-medium">{product.notes}</td>
                         </tr>
                       )}
                       {product.weight && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">الوزن</td>
-                          <td className="px-6 py-2.5 text-oxford-blue font-black">{product.weight}</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">الوزن</td>
+                          <td className="px-6 py-3 text-slate-900 font-black">{product.weight}</td>
                         </tr>
                       )}
                       {product.sku && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">رمز المنتج (SKU)</td>
-                          <td className="px-6 py-2.5 font-mono text-oxford-blue font-bold">{product.sku}</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">رمز المنتج (SKU)</td>
+                          <td className="px-6 py-3 font-mono text-[#5794ff] font-bold">{product.sku}</td>
                         </tr>
                       )}
                       {product.availability && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">حالة التوفر</td>
-                          <td className="px-6 py-2.5 text-emerald-700 font-bold">{product.availability}</td>
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">حالة التوفر</td>
+                          <td className="px-6 py-3 text-emerald-600 font-bold">{product.availability}</td>
                         </tr>
                       )}
                       {product.tags && product.tags.length > 0 && (
-                        <tr className="hover:bg-stone-50/40 transition-colors">
-                          <td className="px-6 py-2.5 text-stone-600 font-bold">الوسوم</td>
-                          <td className="px-6 py-2.5">
+                        <tr className="hover:bg-slate-50 transition-colors">
+                          <td className="px-6 py-3 text-stone-600 font-bold">الوسوم</td>
+                          <td className="px-6 py-3">
                             <div className="flex flex-wrap gap-2">
                               {product.tags.map((tag, i) => (
-                                <span key={i} className="text-xs font-black text-oxford-red bg-oxford-red/10 px-2 py-0.5 rounded border border-oxford-red/20">#{tag}</span>
+                                <span key={i} className="text-xs font-bold text-[#5794ff] bg-blue-50 px-2.5 py-1 rounded-sm border border-blue-200/60">#{tag}</span>
                               ))}
                             </div>
                           </td>
@@ -833,7 +857,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
             )}
 
             {activeTab === 'features' && (
-              <div className="bg-white rounded-xl border border-stone-200/80 shadow-2xs p-6 sm:p-8 max-w-4xl space-y-4">
+              <div className="bg-white rounded-md border border-slate-200/90 shadow-xs p-6 sm:p-8 max-w-4xl space-y-4">
                 {product.features ? (
                   <div className="prose prose-stone max-w-none text-stone-800 font-medium leading-relaxed whitespace-pre-line text-base">
                     {product.features}
@@ -860,43 +884,22 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
         {relatedProducts.length > 0 && (
           <section className="mt-20">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl lg:text-3xl font-bold text-oxford-blue flex items-center gap-3">
-                <span className="w-2 h-8 bg-oxford-red rounded-full" />
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-stone-900 flex items-center gap-3">
+                <span className="w-2.5 h-8 bg-gradient-to-b from-[#5794ff] to-[#D4AF37] rounded-full" />
                 منتجات قد تعجبك
               </h2>
-              <Link to={`/category/${product.category}`} className="text-oxford-red font-bold hover:underline flex items-center gap-2 group text-sm">
+              <Link to={`/category/${product.category}`} className="text-[#5794ff] font-bold hover:underline flex items-center gap-2 group text-sm">
                 عرض المزيد
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform rotate-180" />
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((p) => (
-                <Link
+                <ProductCard
                   key={p.id}
-                  to={`/product/${p.id}`}
-                  className="group bg-white rounded-xl overflow-hidden border border-stone-100 hover:shadow-xl transition-all duration-300 flex flex-col"
-                >
-                  <div className="relative aspect-[4/5] overflow-hidden bg-stone-50">
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <div className="p-5 flex-1 flex flex-col">
-                    <span className="text-stone-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 block">{p.category}</span>
-                    <h3 className="text-base font-bold text-stone-900 mb-3 group-hover:text-oxford-red transition-colors line-clamp-2 leading-tight">
-                      {p.name}
-                    </h3>
-                    <div className="mt-auto pt-4 border-t border-stone-50 flex items-center justify-between">
-                      <span className="text-lg font-black text-oxford-blue">{p.price.toFixed(3)} <span className="text-xs font-normal">د.ت</span></span>
-                      <div className="w-8 h-8 rounded-lg bg-stone-50 flex items-center justify-center text-stone-600 group-hover:bg-oxford-red/10 group-hover:text-oxford-red transition-all">
-                        <Plus size={16} />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                  product={p}
+                  addToCart={addToCart}
+                />
               ))}
             </div>
           </section>
@@ -904,35 +907,35 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
       </div>
 
       {/* Mobile Sticky Bottom Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-stone-200 shadow-xl px-3.5 py-2.5 flex items-center justify-between gap-2.5" dir="rtl">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#5794ff] backdrop-blur-md border-t border-white/20 shadow-xl px-4 py-3 flex items-center justify-between gap-3 text-white" dir="rtl">
         <div className="flex items-center gap-2.5 min-w-0 flex-1">
           <img
-            src={product.image}
+            src={(product.image && product.image.trim()) || defaultFallbackImage}
             alt={product.name}
-            className="w-10 h-10 object-contain rounded-lg bg-stone-50 border border-stone-100 shrink-0"
+            className="w-11 h-11 object-contain rounded-md bg-white p-1 border border-slate-200 shrink-0"
             referrerPolicy="no-referrer"
           />
           <div className="min-w-0">
-            <h4 className="text-xs font-bold text-stone-900 truncate">{product.name}</h4>
-            <div className="text-xs font-black text-oxford-red leading-tight">
+            <h4 className="text-xs font-bold text-white truncate">{product.name}</h4>
+            <div className="text-xs font-black text-amber-200 leading-tight">
               {(Number(product.price) || 0).toFixed(3)} د.ت
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => handleAddToCart()}
-            className="h-9 px-3 rounded-lg border border-oxford-blue text-oxford-blue font-bold text-xs flex items-center gap-1 hover:bg-oxford-blue hover:text-white transition-colors cursor-pointer"
+            className="h-10 px-3.5 rounded-md border border-white/40 text-white font-bold text-xs flex items-center gap-1.5 hover:bg-white/10 transition-colors cursor-pointer"
           >
-            <ShoppingCart size={14} />
+            <ShoppingCart size={15} />
             <span>السلة</span>
           </button>
           <button
             type="button"
             onClick={handleBuyNow}
-            className="h-9 px-3.5 rounded-lg bg-oxford-red text-white font-bold text-xs flex items-center gap-1 shadow-sm hover:bg-oxford-red/90 transition-colors cursor-pointer"
+            className="h-10 px-4 rounded-md bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md hover:brightness-105 transition-all cursor-pointer"
           >
             <span>شراء الآن</span>
           </button>
@@ -1006,11 +1009,11 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
             </div>
 
             {/* Main Lightbox Image View */}
-            <div className="overflow-auto max-h-[75vh] w-full flex items-center justify-center p-3 rounded-2xl bg-stone-900/50">
+            <div className="overflow-auto max-h-[75vh] w-full flex items-center justify-center p-3 rounded-md bg-stone-900/50">
               <img
-                src={activeImage || product.image}
+                src={(activeImage && activeImage.trim()) || productMainImage}
                 alt={product.name}
-                className="max-h-[68vh] object-contain transition-transform duration-200 select-none rounded-xl"
+                className="max-h-[68vh] object-contain transition-transform duration-200 select-none rounded-md"
                 style={{ transform: `scale(${lightboxZoom})` }}
                 referrerPolicy="no-referrer"
               />
@@ -1025,7 +1028,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                     type="button"
                     onClick={() => setActiveImage(img)}
                     className={cn(
-                      "w-14 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer bg-stone-900",
+                      "w-14 h-14 rounded-md overflow-hidden border-2 transition-all shrink-0 cursor-pointer bg-stone-900",
                       (activeImage === img || (!activeImage && i === 0)) ? "border-oxford-red scale-105" : "border-white/20 hover:border-white/50"
                     )}
                   >

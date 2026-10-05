@@ -1,77 +1,47 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function CTABanner() {
   return (
-    <section className="py-8 lg:py-16 bg-white overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-2.5 bg-transparent overflow-hidden">
+      <div className="max-w-[1600px] mx-auto px-2 sm:px-4 lg:px-6">
         <div 
-          className="relative overflow-hidden rounded-3xl bg-sky-400 text-white p-8 lg:p-16 min-h-[300px] lg:min-h-[400px] flex items-center justify-center"
+          className="relative overflow-hidden rounded-md text-white px-4 py-3 sm:py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg shadow-blue-500/15 border border-white/30"
           style={{
-            backgroundImage: `linear-gradient(rgba(56, 189, 248, 0.8), rgba(56, 189, 248, 0.8)), url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&q=80&w=2000')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            background: `linear-gradient(135deg, #5794ff 0%, #3b7ef5 50%, #2563eb 100%)`
           }}
         >
-          {/* Decorative Shapes */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 0.1, scale: 1 }}
-            transition={{ duration: 1 }}
-            className="absolute top-10 left-10 w-48 h-48 pointer-events-none"
-          >
-            <img 
-              src="https://oxfordcity.tn/cdn/shop/files/LOGO_oxford1_32x32.png?v=1746725742" 
-              alt="" 
-              className="w-full h-full object-contain"
-              referrerPolicy="no-referrer"
-            />
-          </motion.div>
+          {/* Ambient Glow */}
+          <div className="absolute top-0 right-0 w-48 h-48 bg-white/20 rounded-full blur-xl pointer-events-none" />
 
           {/* Content */}
-          <div className="relative z-10 text-center max-w-3xl">
-            <motion.h2 
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="text-2xl lg:text-5xl font-black mb-6 leading-tight"
-            >
-              احصل على خصم <span className="text-oxford-red">25%</span> على جميع المنتجات
-              <br />
-              <span className="text-lg lg:text-2xl opacity-80 font-bold">أنواع المنتجات الأكثر مبيعاً</span>
-            </motion.h2>
-
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-            >
-              <Link 
-                to="/category/الكل" 
-                className="inline-flex items-center gap-2 bg-oxford-red hover:bg-white hover:text-oxford-red text-white px-8 py-3 rounded-full font-black text-lg transition-all shadow-xl group"
-              >
-                تسوق الآن
-                <ArrowRight size={20} className="rotate-180 group-hover:-translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
+          <div className="relative z-10 flex flex-wrap items-center gap-2.5 text-right">
+            <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded-sm text-[11px] font-bold text-white border border-white/30">
+              <Sparkles size={12} className="text-amber-300" />
+              <span>عرض حصري وفاخر</span>
+            </span>
+            <span className="text-xs sm:text-sm lg:text-base font-black text-white">
+              احصل على خصم <span className="text-[#DFB15B] font-black text-sm sm:text-base">25%</span> على جميع المستلزمات والدفاتر
+            </span>
+            <span className="hidden md:inline text-xs text-blue-100 font-medium border-r border-white/20 pr-2.5">
+              تشكيلة مكتبة الهدى الأفضل والأكثر موثوقية
+            </span>
           </div>
 
-          {/* Floating Elements */}
-          <motion.div
-            animate={{ 
-              y: [0, -20, 0],
-            }}
-            transition={{ 
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute top-20 right-20 w-12 h-12 bg-white/10 rounded-full blur-xl"
-          />
+          <div className="relative z-10 shrink-0 self-end sm:self-auto">
+            <Link 
+              to="/category/الكل" 
+              className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#DFB15B] via-[#D4AF37] to-[#B8860B] hover:brightness-110 text-slate-950 px-4 py-1.5 rounded-md font-black text-xs transition-all shadow-md group cursor-pointer"
+            >
+              <span>تسوق الآن</span>
+              <ArrowRight size={14} className="rotate-180 group-hover:-translate-x-0.5 transition-transform text-slate-950" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>
   );
 }
+

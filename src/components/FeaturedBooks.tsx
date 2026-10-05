@@ -168,47 +168,47 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
   };
 
   return (
-    <section className="py-10 bg-white border-t border-b border-stone-100">
+    <section className="py-10 bg-transparent border-t border-b border-slate-200/80">
       <div className="max-w-[1600px] mx-auto px-2 sm:px-4 lg:px-6">
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
-            <span className="w-2.5 h-8 bg-oxford-red rounded-sm" />
+            <span className="w-2.5 h-8 bg-gradient-to-b from-[#5794ff] to-[#2563eb] rounded-full" />
             <div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-oxford-blue">الكتب المميزة</h2>
-              <p className="text-xs text-stone-500 font-medium mt-0.5">مختارات من أمهات الكتب والمراجع الدينية والتربوية (تتحرك تلقائياً)</p>
+              <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">الكتب المميزة</h2>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">مختارات من أمهات الكتب والمراجع الدينية والتربوية الفاخرة</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Carousel navigation arrows */}
-            <div className="flex items-center gap-1.5 bg-stone-100 p-1 rounded-md border border-stone-200/60">
+            <div className="flex items-center gap-1.5 bg-blue-50/60 p-1 rounded-md border border-blue-100">
               <button
                 type="button"
                 onClick={() => scroll('right')}
-                className="w-9 h-9 rounded-sm bg-white hover:bg-oxford-blue hover:text-white text-oxford-blue shadow-xs flex items-center justify-center transition-all cursor-pointer"
+                className="w-8 h-8 rounded-sm bg-white hover:bg-[#5794ff] hover:text-white text-slate-700 shadow-xs flex items-center justify-center transition-all cursor-pointer"
                 title="الكتب السابقة"
                 aria-label="الكتب السابقة"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={18} />
               </button>
               <button
                 type="button"
                 onClick={() => scroll('left')}
-                className="w-9 h-9 rounded-sm bg-white hover:bg-oxford-blue hover:text-white text-oxford-blue shadow-xs flex items-center justify-center transition-all cursor-pointer"
+                className="w-8 h-8 rounded-sm bg-white hover:bg-[#5794ff] hover:text-white text-slate-700 shadow-xs flex items-center justify-center transition-all cursor-pointer"
                 title="الكتب التالية"
                 aria-label="الكتب التالية"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={18} />
               </button>
             </div>
 
             <Link 
               to="/category/الكتب" 
-              className="text-oxford-red font-black hover:underline flex items-center gap-1.5 text-sm sm:text-base group px-3.5 py-2 bg-stone-50 hover:bg-stone-100 rounded-md border border-stone-200/60 transition-colors"
+              className="text-[#5794ff] hover:text-blue-700 font-bold hover:underline flex items-center gap-1.5 text-xs sm:text-sm group px-3.5 py-2 bg-blue-50 hover:bg-blue-100/80 rounded-md border border-blue-200/60 transition-colors"
             >
               <span>استكشف المزيد</span>
-              <ArrowRight size={18} className="rotate-180 group-hover:-translate-x-1 transition-transform" />
+              <ArrowRight size={16} className="rotate-180 group-hover:-translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
@@ -224,13 +224,13 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
           {displayBooks.map((book, index) => (
             <div
               key={`${book.id}-${index}`}
-              className="group bg-white rounded-md border border-stone-200/80 overflow-hidden hover:shadow-xl hover:shadow-oxford-blue/10 transition-all duration-300 w-[240px] sm:w-[260px] lg:w-[280px] shrink-0 flex flex-col justify-between"
+              className="group bg-white rounded-xl border border-slate-200/90 overflow-hidden hover:border-[#5794ff] hover:shadow-xl transition-all duration-300 w-[240px] sm:w-[260px] lg:w-[280px] shrink-0 flex flex-col justify-between shadow-xs"
             >
               {/* Image Container - Aspect 3/4 with tight clean styling */}
-              <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
+              <div className="relative aspect-[3/4] overflow-hidden bg-slate-50 rounded-t-xl">
                 <Link to={`/product/${book.id}`} className="block w-full h-full">
                   <img 
-                    src={book.image} 
+                    src={(book.image && book.image.trim() !== '') ? book.image.trim() : '/logo.jpg'} 
                     alt={book.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     referrerPolicy="no-referrer"
@@ -241,12 +241,12 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
                 {/* Badges */}
                 <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
                   {book.badge && (
-                    <span className="bg-oxford-red text-white text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider shadow-xs">
+                    <span className="bg-gradient-to-r from-[#5794ff] to-[#3b7ef5] text-white border border-white/30 text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider shadow-xs">
                       {book.badge}
                     </span>
                   )}
                   {book.discount && (
-                    <span className="bg-oxford-blue text-white text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider shadow-xs">
+                    <span className="bg-gradient-to-r from-[#DFB15B] to-[#B8860B] text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider shadow-xs">
                       {book.discount}
                     </span>
                   )}
@@ -256,7 +256,7 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
                 <div className="absolute left-2.5 top-2.5 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <Link
                     to={`/product/${book.id}`}
-                    className="w-8 h-8 bg-white/95 hover:bg-oxford-blue hover:text-white text-oxford-blue rounded-sm flex items-center justify-center transition-colors shadow-xs"
+                    className="w-8 h-8 bg-white/95 hover:bg-[#5794ff] hover:text-white text-slate-700 rounded-md flex items-center justify-center transition-colors shadow-xs"
                     title="معاينة الكتاب"
                   >
                     <Eye size={15} />
@@ -264,39 +264,39 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
                 </div>
               </div>
 
-              {/* Content: Title in black, prices in red, SKU displayed */}
-              <div className="p-4 flex-1 flex flex-col justify-between bg-white">
+              {/* Content */}
+              <div className="p-3.5 flex-1 flex flex-col justify-between bg-white">
                 <div>
-                  <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="text-[10px] font-mono font-bold text-stone-600 bg-stone-100 px-1.5 py-0.5 rounded-sm">
-                      رمز: {book.sku}
+                  <div className="flex items-center justify-between gap-1 mb-1.5">
+                    <span className="text-[10px] font-mono font-bold text-[#5794ff] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200/60">
+                      {book.sku}
                     </span>
-                    <span className="text-stone-400 text-[11px] font-bold truncate max-w-[120px]">{book.subtitle}</span>
+                    <span className="text-slate-400 text-[11px] font-medium truncate max-w-[120px]">{book.subtitle}</span>
                   </div>
 
                   <Link to={`/product/${book.id}`}>
-                    <h3 className="font-bold text-stone-900 text-sm sm:text-base mb-2 line-clamp-2 group-hover:text-oxford-red transition-colors leading-snug min-h-[2.6rem]">
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-2 line-clamp-2 group-hover:text-[#5794ff] transition-colors leading-snug min-h-[2.6rem]">
                       {book.title}
                     </h3>
                   </Link>
                   
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-base sm:text-lg font-black text-oxford-red">{book.price.toFixed(3)} د.ت</span>
+                    <span className="text-base sm:text-lg font-black text-red-600">{book.price.toFixed(3)} <span className="text-xs text-red-500">د.ت</span></span>
                     {book.oldPrice && (
-                      <span className="text-stone-400 text-xs line-through font-bold">{book.oldPrice.toFixed(3)} د.ت</span>
+                      <span className="text-slate-400 text-xs line-through font-medium">{book.oldPrice.toFixed(3)} د.ت</span>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between pt-2.5 border-t border-stone-100 mb-3 text-xs">
-                    <span className="text-stone-600 font-bold truncate max-w-[140px]">{book.author}</span>
+                  <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 mb-3 text-xs">
+                    <span className="text-slate-600 font-bold truncate max-w-[140px]">{book.author}</span>
                     <div className="flex gap-0.5 items-center">
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
                           size={11} 
-                          className={i < book.rating ? "fill-amber-400 text-amber-400" : "text-stone-200"} 
+                          className={i < book.rating ? "fill-[#D4AF37] text-[#D4AF37]" : "text-stone-200"} 
                         />
                       ))}
                     </div>
@@ -305,11 +305,11 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
                   <button 
                     type="button"
                     onClick={() => handleAddToCart(book)}
-                    className="w-full bg-oxford-blue hover:bg-oxford-red text-white py-2.5 rounded-md font-black text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md shadow-orange-500/25 active:scale-[0.98]"
                   >
                     {addedId === book.id ? (
                       <>
-                        <Check size={16} className="text-emerald-300" />
+                        <Check size={16} className="text-white" />
                         <span>تمت الإضافة!</span>
                       </>
                     ) : (

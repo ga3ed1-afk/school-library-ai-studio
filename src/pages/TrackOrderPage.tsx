@@ -67,26 +67,28 @@ export default function TrackOrderPage() {
   const activeIndex = searchedOrder ? getStepIndex(searchedOrder.status) : 0;
 
   return (
-    <div className="min-h-screen bg-stone-50 py-8 lg:py-12" dir="rtl">
+    <div className="min-h-screen bg-[#F8FAFC] py-8 lg:py-12 text-slate-900" dir="rtl">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs font-bold text-stone-600 mb-6">
-          <Link to="/" className="hover:text-oxford-blue">الرئيسية</Link>
+        <div className="flex items-center gap-2 text-xs font-bold text-slate-500 mb-6">
+          <Link to="/" className="hover:text-[#5794ff] transition-colors">الرئيسية</Link>
           <span>/</span>
-          <span className="text-oxford-blue">تتبع الطلبية</span>
+          <span className="text-[#5794ff] font-black">تتبع الطلبية</span>
         </div>
 
         {/* Hero Card */}
-        <div className="bg-white rounded-3xl p-6 lg:p-10 border border-stone-200 shadow-sm mb-8 text-right">
+        <div className="bg-white rounded-md p-6 lg:p-10 border border-slate-200/90 shadow-md mb-8 text-right relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#5794ff] via-[#85b1ff] to-[#5794ff]" />
+
           <div className="max-w-xl mx-auto text-center mb-8">
-            <div className="w-14 h-14 bg-oxford-blue/10 text-oxford-blue rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-14 h-14 bg-gradient-to-tr from-[#5794ff] to-[#3b7ef5] text-white rounded-md flex items-center justify-center mx-auto mb-4 shadow-md shadow-blue-500/20">
               <Truck size={28} />
             </div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-stone-900 mb-2">
+            <h1 className="text-2xl lg:text-3xl font-black text-slate-900 mb-2">
               تتبع مسار طلبيتك
             </h1>
-            <p className="text-xs lg:text-sm text-stone-600">
-              أدخل رقم الطلب (مثال: #ORD-7281) أو رقم هاتفك لمعرفة حالة الشحن فوراً
+            <p className="text-xs lg:text-sm text-slate-500 font-medium">
+              أدخل رقم الطلب (مثال: #ORD-7281) أو رقم هاتفك لمعرفة حالة الشحن فوراً بدقة تامة
             </p>
           </div>
 
@@ -96,18 +98,18 @@ export default function TrackOrderPage() {
             className="max-w-xl mx-auto flex flex-col sm:flex-row gap-2"
           >
             <div className="relative flex-1">
-              <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+              <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="رقم الطلب #ORD-XXXX أو رقم الهاتف..."
-                className="w-full pr-10 pl-4 py-3 bg-stone-50 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-oxford-blue focus:ring-2 focus:ring-oxford-blue/10 text-stone-900"
+                className="w-full pr-10 pl-4 py-3 bg-slate-50 rounded-md border border-slate-200 text-sm focus:outline-none focus:border-[#5794ff] focus:ring-2 focus:ring-blue-200 text-slate-900 font-bold"
               />
             </div>
             <button
               type="submit"
-              className="bg-oxford-blue hover:bg-oxford-blue/90 text-white px-6 py-3 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="bg-[#5794ff] hover:bg-[#3b7ef5] text-white px-6 py-3 rounded-md font-black text-xs shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>بحث عن الطلب</span>
               <ArrowRight size={14} className="rotate-180" />
@@ -119,26 +121,26 @@ export default function TrackOrderPage() {
         {searchedOrder ? (
           <div className="space-y-6">
             {/* Order Progress Card */}
-            <div className="bg-white rounded-3xl p-6 lg:p-8 border border-stone-200 shadow-sm text-right">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-stone-100 gap-4">
+            <div className="bg-white rounded-md p-6 lg:p-8 border border-slate-200/90 shadow-xs text-right">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold text-stone-500">رقم الطلبية:</span>
-                    <span className="text-lg font-black text-oxford-blue">{searchedOrder.id}</span>
+                    <span className="text-xs font-bold text-slate-500">رقم الطلبية:</span>
+                    <span className="text-lg font-black text-[#5794ff] bg-blue-50 px-2.5 py-0.5 rounded-sm border border-blue-200">{searchedOrder.id}</span>
                   </div>
-                  <div className="text-xs text-stone-500">
+                  <div className="text-xs text-slate-500 font-medium">
                     تاريخ الطلب: {searchedOrder.date} • {searchedOrder.customer}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-stone-600">الحالة:</span>
+                  <span className="text-xs font-bold text-slate-600">الحالة:</span>
                   <span className={cn(
-                    "px-3 py-1 rounded-full text-xs font-black",
-                    searchedOrder.status === 'تم التوصيل' ? "bg-emerald-100 text-emerald-800" :
-                    searchedOrder.status === 'تم الشحن' ? "bg-blue-100 text-oxford-blue" :
-                    searchedOrder.status === 'قيد المعالجة' ? "bg-amber-100 text-amber-800" :
-                    "bg-red-100 text-red-800"
+                    "px-3 py-1 rounded-sm text-xs font-black",
+                    searchedOrder.status === 'تم التوصيل' ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                    searchedOrder.status === 'تم الشحن' ? "bg-[#5794ff] text-white" :
+                    searchedOrder.status === 'قيد المعالجة' ? "bg-blue-50 text-[#5794ff] border border-blue-200" :
+                    "bg-red-50 text-red-700 border border-red-100"
                   )}>
                     {searchedOrder.status}
                   </span>
@@ -155,22 +157,22 @@ export default function TrackOrderPage() {
                     return (
                       <div key={step.id} className="relative flex md:flex-col items-center md:text-center gap-3 md:gap-2">
                         <div className={cn(
-                          "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300",
-                          isCurrent ? "bg-oxford-red text-white shadow-lg shadow-oxford-red/25 ring-4 ring-oxford-red/10 scale-105" :
-                          isDone ? "bg-emerald-600 text-white" :
-                          "bg-stone-100 text-stone-400"
+                          "w-12 h-12 rounded-md flex items-center justify-center shrink-0 transition-all duration-300",
+                          isCurrent ? "bg-[#5794ff] text-white shadow-lg shadow-blue-500/25 ring-2 ring-blue-200 scale-105" :
+                          isDone ? "bg-gradient-to-tr from-[#5794ff] to-[#3b7ef5] text-white shadow-sm" :
+                          "bg-slate-100 text-slate-400"
                         )}>
                           <Icon size={22} />
                         </div>
                         <div>
                           <h4 className={cn(
                             "text-xs font-bold",
-                            isCurrent ? "text-oxford-red font-black" :
-                            isDone ? "text-stone-900 font-bold" : "text-stone-400"
+                            isCurrent ? "text-[#5794ff] font-black" :
+                            isDone ? "text-slate-900 font-bold" : "text-slate-400"
                           )}>
                             {step.label}
                           </h4>
-                          <p className="text-[11px] text-stone-500 mt-0.5 leading-snug">
+                          <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
                             {step.desc}
                           </p>
                         </div>
@@ -184,76 +186,76 @@ export default function TrackOrderPage() {
             {/* Order Details & Items Card */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Items List */}
-              <div className="lg:col-span-2 bg-white rounded-3xl p-6 border border-stone-200 shadow-sm text-right">
-                <h3 className="font-bold text-sm text-stone-900 mb-4 pb-2 border-b border-stone-100">
+              <div className="lg:col-span-2 bg-white rounded-md p-6 border border-slate-200/90 shadow-xs text-right">
+                <h3 className="font-black text-sm text-slate-900 mb-4 pb-2 border-b border-slate-100">
                   محتويات الطلبية ({searchedOrder.items.length} منتج)
                 </h3>
-                <div className="divide-y divide-stone-100">
+                <div className="divide-y divide-slate-100">
                   {searchedOrder.items.map((item, idx) => (
                     <div key={idx} className="py-3 flex items-center gap-3">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-14 h-14 object-contain rounded-xl bg-stone-50 border border-stone-100 shrink-0"
+                        className="w-14 h-14 object-contain rounded-md bg-white border border-slate-200 p-1 shrink-0"
                         referrerPolicy="no-referrer"
                       />
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-xs font-bold text-stone-900 line-clamp-1">{item.name}</h4>
-                        <div className="text-[11px] text-stone-500 mt-0.5">
+                        <h4 className="text-xs font-bold text-slate-900 line-clamp-1">{item.name}</h4>
+                        <div className="text-[11px] text-slate-500 mt-0.5 font-medium">
                           الكمية: {item.quantity} {item.color && `• اللون: ${item.color}`}
                         </div>
                       </div>
-                      <div className="text-xs font-bold text-oxford-blue">
+                      <div className="text-xs font-black text-[#5794ff]">
                         {(item.price * item.quantity).toFixed(3)} د.ت
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-stone-100 space-y-1.5 text-xs text-stone-600">
+                <div className="mt-4 pt-4 border-t border-slate-100 space-y-1.5 text-xs text-slate-600 font-bold">
                   <div className="flex justify-between">
                     <span>المجموع الفرعي:</span>
-                    <span className="font-bold">{searchedOrder.subtotal.toFixed(3)} د.ت</span>
+                    <span className="font-black text-slate-900">{searchedOrder.subtotal.toFixed(3)} د.ت</span>
                   </div>
                   <div className="flex justify-between">
                     <span>مصاريف الشحن:</span>
-                    <span className="font-bold">{searchedOrder.shipping === 0 ? 'مجاني' : `${searchedOrder.shipping.toFixed(3)} د.ت`}</span>
+                    <span className="font-black">{searchedOrder.shipping === 0 ? 'مجاني' : `${searchedOrder.shipping.toFixed(3)} د.ت`}</span>
                   </div>
-                  <div className="flex justify-between text-sm font-bold text-stone-900 pt-2 border-t border-stone-100">
+                  <div className="flex justify-between text-sm font-black text-slate-900 pt-2 border-t border-slate-100">
                     <span>الإجمالي المستحق:</span>
-                    <span className="text-oxford-red text-base font-black">{searchedOrder.total.toFixed(3)} د.ت</span>
+                    <span className="text-2xl font-black text-[#5794ff]">{searchedOrder.total.toFixed(3)} <span className="text-xs text-slate-500">د.ت</span></span>
                   </div>
                 </div>
               </div>
 
               {/* Delivery info & Contact */}
               <div className="space-y-6">
-                <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm text-right">
-                  <h3 className="font-bold text-sm text-stone-900 mb-4 pb-2 border-b border-stone-100">
+                <div className="bg-white rounded-md p-6 border border-slate-200/90 shadow-xs text-right">
+                  <h3 className="font-black text-sm text-slate-900 mb-4 pb-2 border-b border-slate-100">
                     عنوان التوصيل
                   </h3>
-                  <div className="space-y-2 text-xs text-stone-600">
+                  <div className="space-y-2 text-xs text-slate-600">
                     <div className="flex items-center gap-2">
-                      <MapPin size={14} className="text-oxford-red shrink-0" />
-                      <span className="font-bold text-stone-900">{searchedOrder.city}</span>
+                      <MapPin size={14} className="text-[#5794ff] shrink-0" />
+                      <span className="font-bold text-slate-900">{searchedOrder.city}</span>
                     </div>
-                    <p className="pr-5 text-stone-600">{searchedOrder.address}</p>
-                    <div className="flex items-center gap-2 pt-2 border-t border-stone-100">
-                      <Phone size={14} className="text-oxford-blue shrink-0" />
-                      <span className="font-bold text-stone-900" dir="ltr">{searchedOrder.phone}</span>
+                    <p className="pr-5 text-slate-600">{searchedOrder.address}</p>
+                    <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                      <Phone size={14} className="text-[#5794ff] shrink-0" />
+                      <span className="font-bold text-slate-900" dir="ltr">{searchedOrder.phone}</span>
                     </div>
-                    <div className="pt-2 text-[11px] text-stone-500">
-                      طريقة الدفع: <span className="font-bold text-stone-800">{searchedOrder.paymentMethod}</span>
+                    <div className="pt-2 text-[11px] text-slate-500">
+                      طريقة الدفع: <span className="font-bold text-[#5794ff]">{searchedOrder.paymentMethod}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-oxford-blue/5 rounded-3xl p-5 border border-oxford-blue/10 text-right">
-                  <h4 className="text-xs font-bold text-oxford-blue mb-1">هل تحتاج لمساعدة في طلبيتك؟</h4>
-                  <p className="text-[11px] text-stone-600 mb-3">فريق خدمة العملاء جاهز للرد على استفساراتك طيلة أيام الأسبوع.</p>
+                <div className="bg-[#102a5c] rounded-md p-5 border border-[#5794ff]/30 text-right text-white shadow-md">
+                  <h4 className="text-xs font-black text-white mb-1">هل تحتاج لمساعدة في طلبيتك؟</h4>
+                  <p className="text-[11px] text-slate-300 mb-3">فريق خدمة العملاء جاهز للرد على استفساراتك طيلة أيام الأسبوع.</p>
                   <a
                     href="tel:+21671000000"
-                    className="inline-flex items-center gap-2 bg-oxford-blue text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xs hover:bg-oxford-blue/90 transition-all"
+                    className="inline-flex items-center gap-2 bg-[#5794ff] hover:bg-[#3b7ef5] text-white px-4 py-2 rounded-md text-xs font-black shadow-xs transition-all"
                   >
                     <Phone size={13} />
                     <span>اتصل بنا: 71 000 000</span>
@@ -263,19 +265,19 @@ export default function TrackOrderPage() {
             </div>
           </div>
         ) : hasSearched ? (
-          <div className="bg-white rounded-3xl p-10 border border-stone-200 shadow-sm text-center max-w-lg mx-auto space-y-4">
-            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto">
+          <div className="bg-white rounded-md p-10 border border-slate-200/90 shadow-xs text-center max-w-lg mx-auto space-y-4">
+            <div className="w-16 h-16 bg-blue-50 text-[#5794ff] rounded-full flex items-center justify-center mx-auto border border-blue-200">
               <AlertCircle size={32} />
             </div>
-            <h3 className="text-lg font-bold text-stone-900">لم يتم العثور على طلب بهذا الرقم</h3>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              يرجى التأكد من كتابة رقم الطلب بصيغة صحيحة (مثال: <span className="font-bold text-oxford-blue">#ORD-7281</span>) أو البحث باستخدام رقم هاتفك المسجل عند الشراء.
+            <h3 className="text-lg font-black text-slate-900">لم يتم العثور على طلب بهذا الرقم</h3>
+            <p className="text-xs text-slate-500 leading-relaxed font-medium">
+              يرجى التأكد من كتابة رقم الطلب بصيغة صحيحة (مثال: <span className="font-bold text-[#5794ff]">#ORD-7281</span>) أو البحث باستخدام رقم هاتفك المسجل عند الشراء.
             </p>
             <div className="pt-2">
               <button
                 type="button"
                 onClick={() => handleSearch('#ORD-7281')}
-                className="text-xs text-oxford-red font-bold hover:underline"
+                className="text-xs text-[#5794ff] font-black hover:underline cursor-pointer"
               >
                 جرب استعراض طلب تجريبي (#ORD-7281)
               </button>

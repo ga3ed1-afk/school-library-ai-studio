@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
@@ -10,6 +10,7 @@ import TrackOrderPage from './pages/TrackOrderPage';
 import { Product, CartItem } from './types';
 import { productService } from './services/productService';
 import { orderService } from './services/orderService';
+import { ThemeProvider } from './context/ThemeContext';
 
 function AppContent() {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -39,7 +40,7 @@ function AppContent() {
     if (category === 'الكل') {
       navigate('/');
     } else {
-      navigate(`/category/${category}`);
+      navigate(`/category/${encodeURIComponent(category)}`);
     }
   };
 
@@ -97,8 +98,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <ThemeProvider>
+      <HashRouter>
+        <AppContent />
+      </HashRouter>
+    </ThemeProvider>
   );
 }

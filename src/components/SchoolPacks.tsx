@@ -120,38 +120,38 @@ export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
   };
 
   return (
-    <section className="py-16 bg-stone-50 border-y border-stone-200 text-right" dir="rtl">
+    <section className="py-8 lg:py-10 bg-transparent border-y border-slate-200/80 text-right" dir="rtl">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 bg-oxford-red/10 text-oxford-red px-3 py-1 rounded-full text-xs font-bold mb-3">
-            <Sparkles size={14} />
-            <span>عروض العودة المدرسية والجامعية</span>
+        <div className="text-center max-w-2xl mx-auto mb-6">
+          <div className="inline-flex items-center gap-2 bg-amber-50 text-[#B8860B] px-3.5 py-0.5 rounded-sm text-xs font-bold mb-2 border border-amber-200/60">
+            <Sparkles size={13} className="text-[#D4AF37]" />
+            <span>عروض العودة المدرسية والجامعية الفاخرة</span>
           </div>
-          <h2 className="text-2xl lg:text-4xl font-bold text-stone-900 mb-3">
-            باقات اللوازم المدرسية <span className="text-oxford-red">الشاملة</span>
+          <h2 className="text-xl lg:text-2xl font-black text-slate-900 mb-1.5 tracking-tight">
+            باقات اللوازم المدرسية <span className="text-[#5794ff]">الشاملة</span>
           </h2>
-          <p className="text-xs sm:text-sm text-stone-600">
+          <p className="text-xs text-slate-500 font-medium">
             وفر وقتك ونقودك: قوائم مجهزة بعناية لأبنائكم حسب كل مرحلة دراسية وبأسعار تفاضلية بنقرة واحدة.
           </p>
         </div>
 
         {/* Level Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
+        <div className="flex flex-wrap justify-center gap-2 mb-6">
           {SCHOOL_PACKS.map(pack => {
             const isSelected = pack.id === selectedPackId;
             return (
               <button
                 key={pack.id}
                 onClick={() => setSelectedPackId(pack.id)}
-                className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                className={`px-3.5 py-2 rounded-md text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
                   isSelected
-                    ? 'bg-oxford-blue text-white shadow-lg shadow-oxford-blue/20 scale-102'
-                    : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
+                    ? 'bg-[#5794ff] text-white border border-[#5794ff] shadow-md scale-102'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 hover:border-[#5794ff]'
                 }`}
               >
                 <span>{pack.title.replace('حزمة ', '')}</span>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-oxford-red/10 text-oxford-red font-bold'}`}>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-xs ${isSelected ? 'bg-white/20 text-white' : 'bg-blue-50 text-[#5794ff] font-bold border border-blue-200/60'}`}>
                   {pack.badge}
                 </span>
               </button>
@@ -160,19 +160,19 @@ export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
         </div>
 
         {/* Active Pack Showcase Card */}
-        <div className="bg-white rounded-3xl p-6 lg:p-10 border border-stone-200 shadow-xl max-w-5xl mx-auto">
+        <div className="bg-white rounded-xl p-5 lg:p-7 border border-slate-200/90 hover:border-[#5794ff] shadow-md max-w-5xl mx-auto transition-all">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Image Col */}
             <div className="lg:col-span-5 relative">
-              <div className="rounded-2xl overflow-hidden bg-stone-100 aspect-4/3 border border-stone-100">
+              <div className="rounded-xl overflow-hidden bg-slate-50 aspect-4/3 border border-slate-200">
                 <img
-                  src={activePack.image}
+                  src={(activePack.image && activePack.image.trim() !== '') ? activePack.image.trim() : '/logo.jpg'}
                   alt={activePack.title}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="absolute top-4 right-4 bg-oxford-red text-white text-xs font-black px-3 py-1 rounded-lg shadow-md">
+              <div className="absolute top-3 right-3 bg-gradient-to-r from-[#5794ff] to-[#3b7ef5] text-white border border-white/30 text-xs font-black px-2.5 py-0.5 rounded-md shadow-sm">
                 {activePack.badge}
               </div>
             </div>
@@ -180,24 +180,24 @@ export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
             {/* Content Col */}
             <div className="lg:col-span-7 space-y-5">
               <div>
-                <span className="text-xs font-bold text-oxford-blue bg-oxford-blue/5 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold text-[#5794ff] bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200/60">
                   {activePack.level}
                 </span>
-                <h3 className="text-xl lg:text-2xl font-bold text-stone-900 mt-2 mb-2">
+                <h3 className="text-xl lg:text-2xl font-black text-slate-900 mt-2.5 mb-2">
                   {activePack.title}
                 </h3>
-                <p className="text-xs text-stone-600 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed font-medium">
                   {activePack.description}
                 </p>
               </div>
 
               {/* Items List */}
-              <div className="bg-stone-50 rounded-2xl p-4 border border-stone-100">
-                <h4 className="text-xs font-bold text-stone-800 mb-3">محتويات الباقة:</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="bg-slate-50/70 rounded-xl p-4 border border-slate-200/70">
+                <h4 className="text-xs font-bold text-slate-900 mb-3">محتويات الباقة:</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                   {activePack.items.map((it, idx) => (
-                    <div key={idx} className="flex items-start gap-2 text-stone-700">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                    <div key={idx} className="flex items-start gap-2 text-slate-700 font-medium">
+                      <div className="w-4 h-4 rounded-full bg-[#5794ff] text-white flex items-center justify-center shrink-0 mt-0.5">
                         <Check size={10} strokeWidth={3} />
                       </div>
                       <span className="leading-snug">{it.name}</span>
@@ -207,15 +207,15 @@ export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
               </div>
 
               {/* Price & Add to Cart */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-stone-100">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-100">
                 <div className="flex items-baseline gap-3">
-                  <span className="text-2xl lg:text-3xl font-black text-oxford-red">
-                    {activePack.discountPrice.toFixed(3)} د.ت
+                  <span className="text-2xl lg:text-3xl font-black text-red-600">
+                    {activePack.discountPrice.toFixed(3)} <span className="text-sm font-bold text-red-500">د.ت</span>
                   </span>
-                  <span className="text-sm text-stone-400 line-through font-bold">
+                  <span className="text-sm text-slate-400 line-through font-medium">
                     {activePack.originalPrice.toFixed(3)} د.ت
                   </span>
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                  <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                     وفر {(activePack.originalPrice - activePack.discountPrice).toFixed(3)} د.ت
                   </span>
                 </div>
@@ -223,9 +223,9 @@ export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
                 <button
                   type="button"
                   onClick={() => handleAddPack(activePack)}
-                  className="bg-oxford-blue hover:bg-oxford-red text-white px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm shadow-lg shadow-oxford-blue/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
-                  <ShoppingBag size={18} />
+                  <ShoppingBag size={17} />
                   <span>
                     {addedSuccessId === activePack.id ? 'تمت الإضافة للسلة!' : 'إضافة الحزمة كاملة للسلة'}
                   </span>

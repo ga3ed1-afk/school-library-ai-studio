@@ -34,19 +34,37 @@ export const productService = {
       try {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
-          return parsed.map((p: any) => ({
-            ...p,
-            price: Number(p.price) || 0,
-            compareAtPrice: p.compareAtPrice !== undefined && p.compareAtPrice !== null && p.compareAtPrice !== '' ? Number(p.compareAtPrice) : undefined,
-            minPrice: p.minPrice !== undefined && p.minPrice !== null && p.minPrice !== '' ? Number(p.minPrice) : undefined,
-            maxPrice: p.maxPrice !== undefined && p.maxPrice !== null && p.maxPrice !== '' ? Number(p.maxPrice) : undefined,
-            discount: Number(p.discount) || 0,
-            rating: Number(p.rating) || 5,
-            reviewsCount: Number(p.reviewsCount) || 65,
-            csvBatchId: p.csvBatchId || (p.source === 'csv' || p.isCsvImported || p.id > 10 ? (p.csvFileName ? `batch_${p.csvFileName}` : 'batch_legacy') : undefined),
-            csvFileName: p.csvFileName || (p.source === 'csv' || p.isCsvImported || p.id > 10 ? 'ملف CSV مستورد' : undefined),
-            importedAt: p.importedAt || (p.source === 'csv' || p.isCsvImported || p.id > 10 ? 'سابقاً' : undefined),
-          }));
+          const initialMap = new Map(initialProducts.map(p => [p.id, p]));
+          const parsedIds = new Set(parsed.map((p: any) => p.id));
+          const missingInitial = initialProducts.filter(ip => !parsedIds.has(ip.id));
+          const allList = [...parsed, ...missingInitial];
+
+          return allList.map((p: any) => {
+            const initialMatch = initialMap.get(p.id);
+            const safeImage = (p.image && typeof p.image === 'string' && p.image.trim() !== '') 
+              ? p.image.trim() 
+              : (initialMatch?.image || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800');
+            const validImages = Array.isArray(p.images) 
+              ? p.images.filter((img: any) => typeof img === 'string' && img.trim() !== '') 
+              : [];
+
+            return {
+              ...p,
+              subcategory: p.subcategory || initialMatch?.subcategory,
+              image: safeImage,
+              images: validImages.length > 0 ? validImages : [safeImage],
+              price: Number(p.price) || 0,
+              compareAtPrice: p.compareAtPrice !== undefined && p.compareAtPrice !== null && p.compareAtPrice !== '' ? Number(p.compareAtPrice) : undefined,
+              minPrice: p.minPrice !== undefined && p.minPrice !== null && p.minPrice !== '' ? Number(p.minPrice) : undefined,
+              maxPrice: p.maxPrice !== undefined && p.maxPrice !== null && p.maxPrice !== '' ? Number(p.maxPrice) : undefined,
+              discount: Number(p.discount) || 0,
+              rating: Number(p.rating) || 5,
+              reviewsCount: Number(p.reviewsCount) || 65,
+              csvBatchId: p.csvBatchId || (p.source === 'csv' || p.isCsvImported || p.id > 100 ? (p.csvFileName ? `batch_${p.csvFileName}` : 'batch_legacy') : undefined),
+              csvFileName: p.csvFileName || (p.source === 'csv' || p.isCsvImported || p.id > 100 ? 'ملف CSV مستورد' : undefined),
+              importedAt: p.importedAt || (p.source === 'csv' || p.isCsvImported || p.id > 100 ? 'سابقاً' : undefined),
+            };
+          });
         }
       } catch (e) {
         console.error('Failed to parse products from localStorage', e);
@@ -71,9 +89,18 @@ export const productService = {
         const remoteProducts: Product[] = [];
         snapshot.forEach(docSnap => {
           const data = docSnap.data();
+          const safeImg = (data.image && typeof data.image === 'string' && data.image.trim() !== '')
+            ? data.image.trim()
+            : 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800';
+          const validImgs = Array.isArray(data.images)
+            ? data.images.filter((img: any) => typeof img === 'string' && img.trim() !== '')
+            : [];
+
           remoteProducts.push({
             ...(data as Product),
-            id: Number(data.id) || Number(docSnap.id)
+            id: Number(data.id) || Number(docSnap.id),
+            image: safeImg,
+            images: validImgs.length > 0 ? validImgs : [safeImg]
           });
         });
         remoteProducts.sort((a, b) => a.id - b.id);
@@ -83,12 +110,16 @@ export const productService = {
         // Upload initial / current products to Firestore so cloud database has the catalog
         const currentProducts = productService.getProducts();
         if (currentProducts.length > 0) {
-          const batch = writeBatch(db);
-          currentProducts.forEach(p => {
-            const docRef = doc(db, 'products', String(p.id));
-            batch.set(docRef, cleanForFirestore(p));
-          });
-          await batch.commit();
+          const CHUNK_SIZE = 400;
+          for (let i = 0; i < currentProducts.length; i += CHUNK_SIZE) {
+            const chunk = currentProducts.slice(i, i + CHUNK_SIZE);
+            const batch = writeBatch(db);
+            chunk.forEach(p => {
+              const docRef = doc(db, 'products', String(p.id));
+              batch.set(docRef, cleanForFirestore(p));
+            });
+            await batch.commit();
+          }
         }
         return { syncedCount: currentProducts.length, isConnected: true };
       }
@@ -263,6 +294,40 @@ export const productService = {
     } catch (e) {
       console.warn('Firestore bulk delete error:', e);
     }
+  },
+
+  updateProductsCategoryBulk: (ids: number[], newCategory: string, newSubcategory?: string): number => {
+    const set = new Set(ids);
+    const products = productService.getProducts();
+    const updatedProducts = products.map(p => {
+      if (set.has(p.id)) {
+        return {
+          ...p,
+          category: newCategory,
+          ...(newSubcategory !== undefined ? { subcategory: newSubcategory.trim() || undefined } : {})
+        };
+      }
+      return p;
+    });
+    productService.saveProducts(updatedProducts);
+
+    try {
+      const batch = writeBatch(db);
+      const CHUNK_SIZE = 400;
+      const modified = updatedProducts.filter(p => set.has(p.id));
+      for (let i = 0; i < modified.length; i += CHUNK_SIZE) {
+        const chunk = modified.slice(i, i + CHUNK_SIZE);
+        const b = writeBatch(db);
+        chunk.forEach(p => {
+          b.set(doc(db, 'products', String(p.id)), cleanForFirestore(p));
+        });
+        b.commit().catch(err => console.warn('Firestore bulk update error:', err));
+      }
+    } catch (e) {
+      console.warn('Firestore bulk category update failed:', e);
+    }
+
+    return ids.length;
   },
 
   deleteCsvProductsOnly: (): number => {

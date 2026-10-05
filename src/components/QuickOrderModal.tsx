@@ -108,23 +108,23 @@ export default function QuickOrderModal({
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden z-10 my-8 text-right"
+          className="relative w-full max-w-lg bg-white rounded-md shadow-2xl overflow-hidden z-10 my-8 text-right border border-indigo-100"
           dir="rtl"
         >
           {/* Header */}
-          <div className="bg-oxford-blue text-white px-6 py-4 flex items-center justify-between">
+          <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-violet-900 text-white px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-white">
+              <div className="w-9 h-9 bg-white/15 rounded-md flex items-center justify-center text-white backdrop-blur-xs">
                 <ShoppingBag size={20} />
               </div>
               <div>
-                <h3 className="font-bold text-base">طلب سريع بنقرة واحدة</h3>
-                <p className="text-xs text-stone-200">الدفع نقداً عند استلام طلبيتك</p>
+                <h3 className="font-extrabold text-base">طلب سريع بنقرة واحدة</h3>
+                <p className="text-xs text-indigo-200">الدفع نقداً عند استلام طلبيتك</p>
               </div>
             </div>
             <button
               onClick={handleReset}
-              className="p-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-md text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             >
               <X size={20} />
             </button>
@@ -133,25 +133,25 @@ export default function QuickOrderModal({
           {orderConfirmedId ? (
             /* Order Success State */
             <div className="p-8 text-center space-y-5">
-              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+              <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner border border-emerald-100">
                 <CheckCircle2 size={36} />
               </div>
 
               <div>
-                <h4 className="text-2xl font-bold text-stone-900 mb-2">تم تسجيل طلبك بنجاح!</h4>
+                <h4 className="text-2xl font-black text-stone-900 mb-2">تم تسجيل طلبك بنجاح!</h4>
                 <p className="text-sm text-stone-600">
                   شكراً لثقتكم بنا. رقم طلبكم هو{' '}
-                  <span className="font-bold text-oxford-blue text-base">{orderConfirmedId}</span>
+                  <span className="font-extrabold text-indigo-600 text-base">{orderConfirmedId}</span>
                 </p>
                 <p className="text-xs text-stone-500 mt-1">
-                  سنتصل بك على الرقم <span className="font-bold">{phone}</span> لتأكيد موعد التوصيل.
+                  سنتصل بك على الرقم <span className="font-bold text-stone-900">{phone}</span> لتأكيد موعد التوصيل.
                 </p>
               </div>
 
-              <div className="p-4 bg-stone-50 rounded-xl border border-stone-100 text-right text-xs space-y-1.5">
+              <div className="p-4 bg-indigo-50/40 rounded-md border border-indigo-100/70 text-right text-xs space-y-1.5">
                 <div className="flex justify-between font-bold text-stone-800">
                   <span>المنتج:</span>
-                  <span className="text-oxford-blue line-clamp-1">{product.name}</span>
+                  <span className="text-indigo-600 line-clamp-1">{product.name}</span>
                 </div>
                 <div className="flex justify-between text-stone-600">
                   <span>الكمية:</span>
@@ -167,16 +167,16 @@ export default function QuickOrderModal({
                   <span>العنوان:</span>
                   <span>{city} - {address}</span>
                 </div>
-                <div className="flex justify-between font-bold text-stone-900 pt-2 border-t border-stone-200 text-sm">
+                <div className="flex justify-between font-bold text-stone-900 pt-2 border-t border-indigo-100 text-sm">
                   <span>المبلغ الإجمالي عند الاستلام:</span>
-                  <span className="text-oxford-red font-black">{total.toFixed(3)} د.ت</span>
+                  <span className="text-rose-600 font-black">{total.toFixed(3)} د.ت</span>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Link
                   to={`/track-order?q=${orderConfirmedId.replace('#', '')}`}
-                  className="flex-1 bg-oxford-blue hover:bg-oxford-blue/90 text-white py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all"
+                  className="flex-1 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white py-3 rounded-md font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-indigo-200 transition-all cursor-pointer"
                 >
                   <span>تتبع حالة هذا الطلب</span>
                   <ArrowRight size={14} className="rotate-180" />
@@ -184,7 +184,7 @@ export default function QuickOrderModal({
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-700 py-3 rounded-xl font-bold text-xs transition-all"
+                  className="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-3 rounded-md font-bold text-xs transition-all border border-indigo-100 cursor-pointer"
                 >
                   مواصلة التسوق
                 </button>
@@ -194,11 +194,11 @@ export default function QuickOrderModal({
             /* Order Form */
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               {/* Product Brief */}
-              <div className="flex items-center gap-3 p-3 bg-stone-50 rounded-xl border border-stone-100">
+              <div className="flex items-center gap-3 p-3 bg-indigo-50/40 rounded-md border border-indigo-100">
                 <img
-                  src={product.image}
+                  src={(product.image && product.image.trim() !== '') ? product.image.trim() : '/logo.jpg'}
                   alt={product.name}
-                  className="w-14 h-14 object-contain rounded-lg bg-white border border-stone-100 shrink-0"
+                  className="w-14 h-14 object-contain rounded-md bg-white border border-indigo-100 p-1 shrink-0"
                   referrerPolicy="no-referrer"
                 />
                 <div className="flex-1 min-w-0">
@@ -207,7 +207,7 @@ export default function QuickOrderModal({
                     <span>الكمية: {quantity}</span>
                     {selectedColor && <span>• اللون: {selectedColor}</span>}
                   </div>
-                  <div className="mt-1 text-xs font-bold text-oxford-red">
+                  <div className="mt-1 text-xs font-black text-rose-600">
                     {(product.price * quantity).toFixed(3)} د.ت
                   </div>
                 </div>
@@ -217,7 +217,7 @@ export default function QuickOrderModal({
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-bold text-stone-700 mb-1">
-                    الاسم واللقب <span className="text-oxford-red">*</span>
+                    الاسم واللقب <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -225,14 +225,14 @@ export default function QuickOrderModal({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="مثال: محمد الطرابلسي"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:border-oxford-blue focus:ring-1 focus:ring-oxford-blue text-stone-900"
+                    className="w-full px-3.5 py-2.5 rounded-md border border-indigo-100 text-sm focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-stone-900 bg-indigo-50/20"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-stone-700 mb-1">
-                      رقم الهاتف <span className="text-oxford-red">*</span>
+                      رقم الهاتف <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="tel"
@@ -240,17 +240,17 @@ export default function QuickOrderModal({
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="مثال: 98123456"
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:border-oxford-blue focus:ring-1 focus:ring-oxford-blue text-stone-900"
+                      className="w-full px-3.5 py-2.5 rounded-md border border-indigo-100 text-sm focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-stone-900 bg-indigo-50/20"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-stone-700 mb-1">
-                      الولاية <span className="text-oxford-red">*</span>
+                      الولاية <span className="text-rose-500">*</span>
                     </label>
                     <select
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:border-oxford-blue focus:ring-1 focus:ring-oxford-blue text-stone-900 bg-white"
+                      className="w-full px-3.5 py-2.5 rounded-md border border-indigo-100 text-sm focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-stone-900 bg-white cursor-pointer"
                     >
                       {TUNISIAN_GOVERNORATES.map((gov) => (
                         <option key={gov} value={gov}>{gov}</option>
@@ -261,7 +261,7 @@ export default function QuickOrderModal({
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 mb-1">
-                    العنوان بالتفصيل <span className="text-oxford-red">*</span>
+                    العنوان بالتفصيل <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -269,7 +269,7 @@ export default function QuickOrderModal({
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="الشارع، الحي، المعلم القريب..."
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:border-oxford-blue focus:ring-1 focus:ring-oxford-blue text-stone-900"
+                    className="w-full px-3.5 py-2.5 rounded-md border border-indigo-100 text-sm focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-stone-900 bg-indigo-50/20"
                   />
                 </div>
 
@@ -282,13 +282,13 @@ export default function QuickOrderModal({
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="أوقات التوصيل المفضلة أو تعليمات خاصة"
-                    className="w-full px-3.5 py-2 rounded-lg border border-stone-300 text-xs focus:outline-none focus:border-oxford-blue text-stone-900"
+                    className="w-full px-3.5 py-2 rounded-md border border-indigo-100 text-xs focus:outline-none focus:border-indigo-600 text-stone-900 bg-indigo-50/20"
                   />
                 </div>
               </div>
 
               {/* Price summary */}
-              <div className="pt-2 border-t border-stone-100 text-xs space-y-1 text-stone-600">
+              <div className="pt-2 border-t border-indigo-50 text-xs space-y-1 text-stone-600">
                 <div className="flex justify-between">
                   <span>سعر المنتج ({quantity} قطعة):</span>
                   <span className="font-bold">{subtotal.toFixed(3)} د.ت</span>
@@ -299,21 +299,21 @@ export default function QuickOrderModal({
                     {shippingCost === 0 ? 'مجاني (أكثر من 100 د.ت)' : `${shippingCost.toFixed(3)} د.ت`}
                   </span>
                 </div>
-                <div className="flex justify-between text-sm font-bold text-stone-900 pt-1 border-t border-stone-200">
+                <div className="flex justify-between text-sm font-bold text-stone-900 pt-1 border-t border-indigo-50">
                   <span>المجموع للدفع عند الاستلام:</span>
-                  <span className="text-oxford-red text-base font-black">{total.toFixed(3)} د.ت</span>
+                  <span className="text-rose-600 text-base font-black">{total.toFixed(3)} د.ت</span>
                 </div>
               </div>
 
               {/* Trust badges */}
               <div className="grid grid-cols-2 gap-2 text-[11px] text-stone-600 pt-1">
-                <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 p-2 rounded-lg">
+                <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 p-2 rounded-md border border-emerald-100">
                   <Truck size={14} className="shrink-0 text-emerald-600" />
-                  <span>توصيل سريع لباب منزلك خلال 24/48 ساعة</span>
+                  <span>توصيل سريع لباب منزلك</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-blue-50 text-blue-800 p-2 rounded-lg">
-                  <ShieldCheck size={14} className="shrink-0 text-oxford-blue" />
-                  <span>معاينة المنتج والدفع عند الاستلام</span>
+                <div className="flex items-center gap-1.5 bg-indigo-50 text-indigo-800 p-2 rounded-md border border-indigo-100">
+                  <ShieldCheck size={14} className="shrink-0 text-indigo-600" />
+                  <span>معاينة المنتج عند الاستلام</span>
                 </div>
               </div>
 
@@ -321,7 +321,7 @@ export default function QuickOrderModal({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-oxford-red hover:bg-oxford-red/90 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white py-3.5 rounded-md font-bold text-sm shadow-md shadow-rose-200 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <span>جارٍ تسجيل طلبك...</span>
