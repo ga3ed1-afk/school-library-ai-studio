@@ -315,12 +315,12 @@ export default function DashboardPage() {
     image: '',
     images: [],
     category: 'اللوازم المدرسية',
-    size: 'حجم مدمج',
-    sizes: ['حجم قياسي', 'حجم كبير (XL)', 'حجم مدمج'],
-    style: 'طقم إضافي',
-    styles: ['طراز قياسي', 'طراز بريميوم', 'طقم إضافي'],
-    brand: 'أكسفورد سيتي',
-    colors: ['Noir', 'Rouge', 'Vert', 'Bleu'],
+    size: '',
+    sizes: [],
+    style: '',
+    styles: [],
+    brand: 'بن عمار للمكتبية و الإعلامية',
+    colors: [],
     productType: '',
     weight: '',
     features: '',
@@ -447,7 +447,7 @@ export default function DashboardPage() {
       if (n.includes('حاسوب') || n.includes('كمبيوتر') || n.includes('الكترون')) return '💻';
       if (n.includes('لعب') || n.includes('العاب')) return '🧸';
       if (n.includes('فن') || n.includes('رسم') || n.includes('الوان')) return '🎨';
-      if (n.includes('رمضان') || n.includes('هلال')) return '🌙';
+      if (n.includes('مستند') || n.includes('وثيق') || n.includes('ملف')) return '📑';
       if (n.includes('مكتب') || n.includes('ادوات')) return '📎';
       return '🏷️';
     };
@@ -924,6 +924,21 @@ export default function DashboardPage() {
     setTimeout(() => setSuccessMessage(null), 4000);
   };
 
+  const [isHeaderSyncing, setIsHeaderSyncing] = useState(false);
+
+  const handleHeaderSync = async () => {
+    setIsHeaderSyncing(true);
+    try {
+      const res = await productService.syncWithFirestore();
+      setProducts(productService.getProducts());
+      setSuccessMessage({ text: res.message || `تمت المزامنة بنجاح! (${res.syncedCount} سلعة)` });
+      setTimeout(() => setSuccessMessage(null), 5000);
+    } catch (err) {
+      console.warn(err);
+    } finally {
+      setIsHeaderSyncing(false);
+    }
+  };
 
   return (
     <div className="flex h-screen bg-stone-50 overflow-hidden font-sans" dir="rtl">
@@ -941,12 +956,12 @@ export default function DashboardPage() {
         md:static md:translate-x-0 md:z-auto md:shadow-sm md:w-80
         ${isMobileMenuOpen ? 'translate-x-0 block' : 'translate-x-full md:translate-x-0 hidden md:block'}
       `}>
-        <div className="p-4 sm:p-5 text-xl sm:text-2xl font-black text-stone-900 border-b border-indigo-50 flex items-center justify-between">
+        <div className="p-4 sm:p-5 text-xl sm:text-2xl font-black text-stone-900 border-b border-stone-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg overflow-hidden border border-slate-200">
-              <img src="/logo.jpg" alt="مكتبة الهدى" className="w-full h-full object-cover" />
+            <div className="w-8 h-8 rounded-lg overflow-hidden border border-stone-200 bg-white">
+              <img src="/logo.svg" alt="بن عمار للمكتبية و الإعلامية" className="w-full h-full object-contain p-0.5" />
             </div>
-            <span>مكتبة <span className="text-[#5794ff]">الهدى</span></span>
+            <span className="text-base font-black">بن عمار <span className="text-[oklch(54.1%_0.281_293.009)] text-xs font-bold">للإعلامية</span></span>
           </div>
           <button 
             type="button"
@@ -1300,12 +1315,25 @@ export default function DashboardPage() {
             </span>
           </div>
 
-          <Link
-            to="/"
-            className="text-xs font-bold text-oxford-red hover:underline flex items-center gap-1 px-2 py-1 rounded-md hover:bg-red-50 transition-colors"
-          >
-            <span>المتجر ←</span>
-          </Link>
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={handleHeaderSync}
+              disabled={isHeaderSyncing}
+              className="text-xs font-black text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+              title="مزامنة مع قاعدة البيانات السحابية"
+            >
+              <RefreshCw size={13} className={isHeaderSyncing ? "animate-spin" : ""} />
+              <span>مزامنة 🔄</span>
+            </button>
+
+            <Link
+              to="/"
+              className="text-xs font-bold text-oxford-red hover:underline flex items-center gap-1 px-2 py-1 rounded-md hover:bg-red-50 transition-colors"
+            >
+              <span>المتجر ←</span>
+            </Link>
+          </div>
         </div>
         <AnimatePresence>
           {successMessage && (

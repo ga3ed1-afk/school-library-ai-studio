@@ -34,23 +34,16 @@ export const productService = {
       try {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
-          const initialMap = new Map(initialProducts.map(p => [p.id, p]));
-          const parsedIds = new Set(parsed.map((p: any) => p.id));
-          const missingInitial = initialProducts.filter(ip => !parsedIds.has(ip.id));
-          const allList = [...parsed, ...missingInitial];
-
-          return allList.map((p: any) => {
-            const initialMatch = initialMap.get(p.id);
+          return parsed.map((p: any) => {
             const safeImage = (p.image && typeof p.image === 'string' && p.image.trim() !== '') 
               ? p.image.trim() 
-              : (initialMatch?.image || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800');
+              : '/logo.svg';
             const validImages = Array.isArray(p.images) 
               ? p.images.filter((img: any) => typeof img === 'string' && img.trim() !== '') 
               : [];
 
             return {
               ...p,
-              subcategory: p.subcategory || initialMatch?.subcategory,
               image: safeImage,
               images: validImages.length > 0 ? validImages : [safeImage],
               price: Number(p.price) || 0,
@@ -59,10 +52,7 @@ export const productService = {
               maxPrice: p.maxPrice !== undefined && p.maxPrice !== null && p.maxPrice !== '' ? Number(p.maxPrice) : undefined,
               discount: Number(p.discount) || 0,
               rating: Number(p.rating) || 5,
-              reviewsCount: Number(p.reviewsCount) || 65,
-              csvBatchId: p.csvBatchId || (p.source === 'csv' || p.isCsvImported || p.id > 100 ? (p.csvFileName ? `batch_${p.csvFileName}` : 'batch_legacy') : undefined),
-              csvFileName: p.csvFileName || (p.source === 'csv' || p.isCsvImported || p.id > 100 ? 'ملف CSV مستورد' : undefined),
-              importedAt: p.importedAt || (p.source === 'csv' || p.isCsvImported || p.id > 100 ? 'سابقاً' : undefined),
+              reviewsCount: Number(p.reviewsCount) || 12,
             };
           });
         }
@@ -70,7 +60,7 @@ export const productService = {
         console.error('Failed to parse products from localStorage', e);
       }
     }
-    return initialProducts;
+    return [];
   },
 
   saveProducts: (products: Product[]) => {
@@ -80,52 +70,72 @@ export const productService = {
   },
 
   // Sync with Firestore on startup or when requested
-  syncWithFirestore: async (): Promise<{ syncedCount: number; isConnected: boolean }> => {
+  syncWithFirestore: async (): Promise<{ syncedCount: number; isConnected: boolean; message?: string }> => {
     try {
       const colRef = collection(db, 'products');
       const snapshot = await getDocs(colRef);
+      const localProducts = productService.getProducts();
 
-      if (!snapshot.empty) {
-        const remoteProducts: Product[] = [];
-        snapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          const safeImg = (data.image && typeof data.image === 'string' && data.image.trim() !== '')
-            ? data.image.trim()
-            : 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800';
-          const validImgs = Array.isArray(data.images)
-            ? data.images.filter((img: any) => typeof img === 'string' && img.trim() !== '')
-            : [];
+      const remoteMap = new Map<number, Product>();
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const pId = Number(data.id) || Number(docSnap.id);
+        const safeImg = (data.image && typeof data.image === 'string' && data.image.trim() !== '')
+          ? data.image.trim()
+          : '/logo.svg';
+        const validImgs = Array.isArray(data.images)
+          ? data.images.filter((img: any) => typeof img === 'string' && img.trim() !== '')
+          : [];
 
-          remoteProducts.push({
-            ...(data as Product),
-            id: Number(data.id) || Number(docSnap.id),
-            image: safeImg,
-            images: validImgs.length > 0 ? validImgs : [safeImg]
-          });
+        remoteMap.set(pId, {
+          ...(data as Product),
+          id: pId,
+          image: safeImg,
+          images: validImgs.length > 0 ? validImgs : [safeImg]
         });
-        remoteProducts.sort((a, b) => a.id - b.id);
-        productService.saveProducts(remoteProducts);
-        return { syncedCount: remoteProducts.length, isConnected: true };
-      } else {
-        // Upload initial / current products to Firestore so cloud database has the catalog
-        const currentProducts = productService.getProducts();
-        if (currentProducts.length > 0) {
-          const CHUNK_SIZE = 400;
-          for (let i = 0; i < currentProducts.length; i += CHUNK_SIZE) {
-            const chunk = currentProducts.slice(i, i + CHUNK_SIZE);
-            const batch = writeBatch(db);
-            chunk.forEach(p => {
-              const docRef = doc(db, 'products', String(p.id));
-              batch.set(docRef, cleanForFirestore(p));
-            });
-            await batch.commit();
-          }
+      });
+
+      // Merge: Keep all remote products, and push any local-only products to remote
+      const mergedMap = new Map<number, Product>(remoteMap);
+      const toUploadToCloud: Product[] = [];
+
+      localProducts.forEach(lp => {
+        if (!mergedMap.has(lp.id)) {
+          mergedMap.set(lp.id, lp);
+          toUploadToCloud.push(lp);
         }
-        return { syncedCount: currentProducts.length, isConnected: true };
+      });
+
+      // If we have local products that aren't in Firestore yet, batch write them
+      if (toUploadToCloud.length > 0) {
+        const CHUNK_SIZE = 400;
+        for (let i = 0; i < toUploadToCloud.length; i += CHUNK_SIZE) {
+          const chunk = toUploadToCloud.slice(i, i + CHUNK_SIZE);
+          const batch = writeBatch(db);
+          chunk.forEach(p => {
+            const docRef = doc(db, 'products', String(p.id));
+            batch.set(docRef, cleanForFirestore(p));
+          });
+          await batch.commit();
+        }
       }
-    } catch (error) {
+
+      const allMerged = Array.from(mergedMap.values()).sort((a, b) => a.id - b.id);
+      productService.saveProducts(allMerged);
+
+      return { 
+        syncedCount: allMerged.length, 
+        isConnected: true,
+        message: `تمت المزامنة بنجاح! إجمالي السلع المتزامنة: ${allMerged.length}`
+      };
+    } catch (error: any) {
       console.warn('Firestore sync failed, continuing with local store:', error);
-      return { syncedCount: 0, isConnected: false };
+      const localProducts = productService.getProducts();
+      return { 
+        syncedCount: localProducts.length, 
+        isConnected: false,
+        message: `تعذر الاتصال بقاعدة البيانات السحابية، تم الاعتماد على الذاكرة المحلية (${localProducts.length} سلعة)`
+      };
     }
   },
 

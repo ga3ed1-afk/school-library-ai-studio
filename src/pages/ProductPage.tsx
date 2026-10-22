@@ -27,7 +27,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isCompared, setIsCompared] = useState(false);
-  const [selectedColor, setSelectedColor] = useState<string>('Noir');
+  const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedStyle, setSelectedStyle] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'specs' | 'features' | 'reviews'>('specs');
@@ -161,12 +161,20 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
     return [];
   }, [product]);
 
+  const colorsList = useMemo(() => {
+    if (product?.colors && Array.isArray(product.colors)) {
+      const filtered = product.colors.map(c => String(c || '').trim()).filter(Boolean);
+      if (filtered.length > 0) return filtered;
+    }
+    return [];
+  }, [product]);
+
   React.useEffect(() => {
     if (product) {
-      if (product.colors && product.colors.length > 0) {
-        setSelectedColor(product.colors[0]);
+      if (colorsList.length > 0) {
+        setSelectedColor(colorsList[0]);
       } else {
-        setSelectedColor('Noir');
+        setSelectedColor('');
       }
 
       if (stylesList.length > 0) {
@@ -181,35 +189,22 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
         setSelectedSize('');
       }
     }
-  }, [product, stylesList, sizesList]);
+  }, [product, colorsList, stylesList, sizesList]);
 
   const bulletPoints = useMemo(() => {
-    if (product?.bulletPoints && product.bulletPoints.length > 0) {
-      return product.bulletPoints;
+    if (product?.bulletPoints && Array.isArray(product.bulletPoints)) {
+      const filtered = product.bulletPoints.map(b => String(b || '').trim()).filter(Boolean);
+      if (filtered.length > 0) return filtered;
     }
-    if (product?.features) {
+    if (product?.features && typeof product.features === 'string' && product.features.trim()) {
       const parts = product.features.split(/[\n;]/).map(s => s.trim().replace(/^[-•*]\s*/, '')).filter(Boolean);
       if (parts.length > 0) return parts;
     }
-    return [
-      'جودة كتابة ورسم فائقة السلاسة',
-      'ألوان زاهية ومقاومة للبهتان',
-      'خامات آمنة وغير سامة مطابقة للمواصفات',
-      'أدوات متينة ومقاومة للكسر العرضي',
-      'تصميم مريح للأيدي والأصابع',
-      'مثالي للطلبة في مختلف المراحل الدراسية'
-    ];
+    return [];
   }, [product]);
 
   const bulletCol1 = useMemo(() => bulletPoints.slice(0, Math.ceil(bulletPoints.length / 2)), [bulletPoints]);
   const bulletCol2 = useMemo(() => bulletPoints.slice(Math.ceil(bulletPoints.length / 2)), [bulletPoints]);
-
-  const colorsList = useMemo(() => {
-    if (product?.colors && product.colors.length > 0) {
-      return product.colors;
-    }
-    return ['Noir', 'Rouge', 'Vert', 'Bleu'];
-  }, [product]);
 
   const getColorHex = (colorName: string): string => {
     const trimmed = colorName.trim();
@@ -312,11 +307,34 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[480px_1fr] xl:grid-cols-[520px_1fr] gap-6 md:gap-8 lg:gap-12 items-start">
-          {/* Product Image & Thumbnails Section (Stacked Vertically with Thumbnails at Bottom) */}
-          <div className="flex flex-col gap-3.5 w-full relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_520px] xl:grid-cols-[1fr_560px] gap-6 md:gap-8 lg:gap-10 items-start">
+          {/* Product Image & Thumbnails Section (الصور على اليسار - order-1 on mobile, order-2 on desktop) */}
+          <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-3.5 w-full relative items-start order-1 md:order-2">
+            {/* Thumbnail Gallery (Beside the Main Image on Desktop/Tablet, Below on Mobile) */}
+            {images.length > 1 && (
+              <div className="flex sm:flex-col gap-2.5 overflow-x-auto sm:overflow-y-auto sm:max-h-[500px] shrink-0 w-full sm:w-[76px] lg:w-[84px] custom-scrollbar py-0.5 pe-0.5">
+                {images.map((img, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setActiveImage(img)}
+                    onMouseEnter={() => setActiveImage(img)}
+                    className={cn(
+                      "w-16 h-16 sm:w-[74px] sm:h-[74px] lg:w-[80px] lg:h-[80px] shrink-0 rounded-md overflow-hidden border-2 transition-all cursor-pointer bg-white p-0.5 shadow-2xs hover:shadow-xs",
+                      (activeImage === img || (!activeImage && i === 0))
+                        ? "border-[#5794ff] ring-2 ring-[#5794ff]/40 shadow-sm scale-102"
+                        : "border-slate-200 hover:border-[#5794ff]/70 opacity-70 hover:opacity-100"
+                    )}
+                    title={`عرض الصورة ${i + 1}`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover rounded-xs" referrerPolicy="no-referrer" />
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Main Image Box - Enlarged & Sharpened */}
-            <div className="w-full relative">
+            <div className="flex-1 min-w-0 w-full relative">
               <motion.div 
                 key={activeImage}
                 initial={{ opacity: 0, scale: 0.98 }}
@@ -368,13 +386,16 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                 </div>
               </motion.div>
 
-              {/* zoomWindowContainer: Magnified view container placed beside image (Only on large screens) */}
+              {/* zoomWindowContainer: Magnified view container placed beside image (Opens to the right over text on large screens) */}
               {isZooming && (
                 <div 
-                  className="zoomWindowContainer hidden xl:block absolute top-0 start-full ms-6 z-50 rounded-xs overflow-hidden border-2 border-[#5794ff] bg-white shadow-2xl pointer-events-none"
+                  className="zoomWindowContainer hidden xl:block absolute top-0 z-50 rounded-xs overflow-hidden border-2 border-[#5794ff] bg-white shadow-2xl pointer-events-none"
                   style={{
                     width: '480px',
                     height: '480px',
+                    left: '100%',
+                    right: 'auto',
+                    marginLeft: '16px'
                   }}
                 >
                   <div 
@@ -392,31 +413,10 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                 </div>
               )}
             </div>
-
-            {/* Thumbnail Gallery (Moved to Bottom Below Main Image) */}
-            {images.length > 1 && (
-              <div className="flex items-center gap-2.5 overflow-x-auto pb-2 custom-scrollbar w-full">
-                {images.map((img, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => setActiveImage(img)}
-                    className={cn(
-                      "w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-md overflow-hidden border-2 transition-all cursor-pointer bg-white p-0.5 shadow-2xs",
-                      (activeImage === img || (!activeImage && i === 0))
-                        ? "border-[#5794ff] ring-2 ring-[#5794ff]/40 shadow-sm scale-102"
-                        : "border-slate-200 hover:border-[#5794ff]/70 opacity-70 hover:opacity-100"
-                    )}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover rounded-xs" referrerPolicy="no-referrer" />
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
-          {/* Product Info Section */}
-          <div className="flex flex-col h-full col-lg-7">
+          {/* Product Info Section (الكتابة على اليمين لتتناسب مع العربية) */}
+          <div className="flex flex-col h-full col-lg-7 order-2 md:order-1">
             <h1 className="text-2xl lg:text-3xl font-extrabold text-stone-900 mb-3 leading-tight tracking-tight">
               {product.name}
             </h1>
@@ -426,7 +426,7 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                 <div className="flex items-center gap-1.5 text-xs font-bold text-stone-500">
                   <span>من</span>
                   <Link className="text-[#5794ff] font-extrabold hover:underline transition-colors" to="/">
-                    {product.brand || 'مكتبة الهدى'}
+                    {product.brand || 'بن عمار للمكتبية و الإعلامية'}
                   </Link>
                 </div>
                 <div className="h-3 w-px bg-stone-200"></div>
@@ -480,14 +480,18 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
               )}
             </div>
 
-            {/* Description & Bullet points */}
-            <div className="product-description mb-5 text-stone-700">
-              {product.description && (
-                <p className="text-sm sm:text-base font-medium leading-relaxed mb-4 text-stone-700">
+            {/* Description */}
+            {product.description && (
+              <div className="product-description mb-5 text-stone-700 bg-stone-50/70 p-4 rounded-lg border border-stone-200/70 shadow-2xs">
+                <p className="text-sm sm:text-base font-normal leading-relaxed text-stone-800 whitespace-pre-line">
                   {product.description}
                 </p>
-              )}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+              </div>
+            )}
+
+            {/* Bullet points (Only rendered if product has actual features/bullet points) */}
+            {bulletPoints.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
                 <ul className="list-dot">
                   {bulletCol1.map((item, idx) => (
                     <li key={idx}>{item}</li>
@@ -499,33 +503,35 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                   ))}
                 </ul>
               </div>
-            </div>
+            )}
 
-            {/* Colors */}
-            <div className="box-product-color mb-5">
-              <p className="text-sm font-bold text-stone-800 mb-2">
-                اللون: <span className="text-[#5794ff] font-extrabold nameColor">{selectedColor}</span>
-              </p>
-              <ul className="list-colors">
-                {colorsList.map((colorName, idx) => {
-                  const isActive = selectedColor === colorName;
-                  const hex = getColorHex(colorName);
-                  return (
-                    <li 
-                      key={idx} 
-                      className={isActive ? "active" : ""} 
-                      title={colorName}
-                      onClick={() => setSelectedColor(colorName)}
-                    >
-                      <span 
-                        className="w-7 h-7 rounded-full block border-2 border-white shadow-xs ring-1 ring-stone-300 transition-transform" 
-                        style={{ backgroundColor: hex }}
-                      />
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            {/* Colors (Only rendered if product actually specifies colors) */}
+            {colorsList.length > 0 && (
+              <div className="box-product-color mb-5">
+                <p className="text-sm font-bold text-stone-800 mb-2">
+                  اللون: <span className="text-[#5794ff] font-extrabold nameColor">{selectedColor}</span>
+                </p>
+                <ul className="list-colors">
+                  {colorsList.map((colorName, idx) => {
+                    const isActive = selectedColor === colorName;
+                    const hex = getColorHex(colorName);
+                    return (
+                      <li 
+                        key={idx} 
+                        className={isActive ? "active" : ""} 
+                        title={colorName}
+                        onClick={() => setSelectedColor(colorName)}
+                      >
+                        <span 
+                          className="w-7 h-7 rounded-full block border-2 border-white shadow-xs ring-1 ring-stone-300 transition-transform" 
+                          style={{ backgroundColor: hex }}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
 
             {/* Style and Size */}
             {(stylesList.length > 0 || sizesList.length > 0) && (

@@ -42,10 +42,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             className="fixed inset-0 m-auto w-full max-w-md h-fit bg-white rounded-md shadow-2xl z-[101] overflow-hidden flex flex-col font-sans border border-indigo-100"
             dir="rtl"
           >
-            <div className="p-6 sm:p-8 flex justify-between items-center bg-gradient-to-r from-indigo-900 via-indigo-800 to-violet-900 text-white">
+            <div 
+              className="p-6 sm:p-8 flex justify-between items-center text-white"
+              style={{ backgroundColor: 'oklch(54.1% 0.281 293.009)' }}
+            >
               <div>
                 <h2 className="text-2xl font-black text-white">{isLogin ? 'تسجيل الدخول' : 'إنشاء حساب'}</h2>
-                <p className="text-indigo-200 text-xs font-bold">مرحباً بك في مكتبة الهدى</p>
+                <p className="text-purple-100 text-xs font-bold">مرحباً بك في بن عمار للمكتبية و الإعلامية</p>
               </div>
               <button
                 onClick={onClose}

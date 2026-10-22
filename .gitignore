@@ -1,8 +1,23 @@
+# Dependencies
 node_modules/
-build/
-dist/
 coverage/
-.DS_Store
-*.log
+
+# Build outputs
+dist/
+dist_single/
+html_build/
+tmp/
+
+# Large standalone HTML bundle artifacts (> 1MB exceeds GitHub API commit limits)
+index_single_file.html
+standalone_store.html
+*.bundle.html
+
+# Environment variables
 .env*
 !.env.example
+
+# Logs and OS
+*.log
+.DS_Store
+.aistudio/

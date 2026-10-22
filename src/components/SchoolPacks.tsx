@@ -166,7 +166,7 @@ export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
             <div className="lg:col-span-5 relative">
               <div className="rounded-xl overflow-hidden bg-slate-50 aspect-4/3 border border-slate-200">
                 <img
-                  src={(activePack.image && activePack.image.trim() !== '') ? activePack.image.trim() : '/logo.jpg'}
+                  src={(activePack.image && activePack.image.trim() !== '') ? activePack.image.trim() : '/logo.svg'}
                   alt={activePack.title}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -208,17 +208,8 @@ export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
 
               {/* Price & Add to Cart */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-100">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-2xl lg:text-3xl font-black text-red-600">
-                    {activePack.discountPrice.toFixed(3)} <span className="text-sm font-bold text-red-500">د.ت</span>
-                  </span>
-                  <span className="text-sm text-slate-400 line-through font-medium">
-                    {activePack.originalPrice.toFixed(3)} د.ت
-                  </span>
-                  <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                    وفر {(activePack.originalPrice - activePack.discountPrice).toFixed(3)} د.ت
-                  </span>
-                </div>
+                {/* Price display - left empty as requested */}
+                <div className="flex items-baseline gap-3 min-h-[1.5rem]" />
 
                 <button
                   type="button"

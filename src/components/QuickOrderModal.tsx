@@ -196,7 +196,7 @@ export default function QuickOrderModal({
               {/* Product Brief */}
               <div className="flex items-center gap-3 p-3 bg-indigo-50/40 rounded-md border border-indigo-100">
                 <img
-                  src={(product.image && product.image.trim() !== '') ? product.image.trim() : '/logo.jpg'}
+                  src={(product.image && product.image.trim() !== '') ? product.image.trim() : '/logo.svg'}
                   alt={product.name}
                   className="w-14 h-14 object-contain rounded-md bg-white border border-indigo-100 p-1 shrink-0"
                   referrerPolicy="no-referrer"

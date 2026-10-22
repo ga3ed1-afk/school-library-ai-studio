@@ -30,6 +30,7 @@ export interface Product {
   maxPrice?: number;
   notes?: string;
   compareAtPrice?: number;
+  badge?: string;
   rating?: number;
   reviewsCount?: number;
   source?: 'csv' | 'manual' | 'initial';

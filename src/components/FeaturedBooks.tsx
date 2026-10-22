@@ -230,7 +230,7 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
               <div className="relative aspect-[3/4] overflow-hidden bg-slate-50 rounded-t-xl">
                 <Link to={`/product/${book.id}`} className="block w-full h-full">
                   <img 
-                    src={(book.image && book.image.trim() !== '') ? book.image.trim() : '/logo.jpg'} 
+                    src={(book.image && book.image.trim() !== '') ? book.image.trim() : '/logo.svg'} 
                     alt={book.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     referrerPolicy="no-referrer"
@@ -280,12 +280,8 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
                     </h3>
                   </Link>
                   
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-base sm:text-lg font-black text-red-600">{book.price.toFixed(3)} <span className="text-xs text-red-500">د.ت</span></span>
-                    {book.oldPrice && (
-                      <span className="text-slate-400 text-xs line-through font-medium">{book.oldPrice.toFixed(3)} د.ت</span>
-                    )}
-                  </div>
+                  {/* Price display - left empty as requested */}
+                  <div className="mb-3 min-h-[1.5rem]" />
                 </div>
 
                 <div>

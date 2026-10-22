@@ -68,7 +68,7 @@ export default function CategoryPage({ addToCart }: CategoryPageProps) {
     if (isAll) {
       return {
         name: 'جميع التصنيفات والمنتجات',
-        description: 'تصفح كافة المنتجات والمعروضات المتوفرة في مكتبة الهدى بجودة عالية وأسعار ممتازة.',
+        description: 'تصفح كافة المنتجات والمعروضات المتوفرة في بن عمار للمكتبية و الإعلامية بجودة عالية وأسعار ممتازة.',
         bannerImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1600',
         icon: 'https://oxfordcity.tn/cdn/shop/files/school-bag_17738834_x26.png?v=1748442626',
         subcategories: categories.map(c => c.name)
@@ -267,6 +267,11 @@ export default function CategoryPage({ addToCart }: CategoryPageProps) {
                       const icon = match ? match[1] : '▪️';
                       const label = match ? match[2] : sub;
                       const isActive = subCategory === sub || decodedSubCategory === sub;
+                      const subCount = products.filter(p => {
+                        const inCat = isAll || p.category === decodedCategoryName || p.category === categoryName || (category && p.category === category.name);
+                        return inCat && matchesSubCategory(p, sub);
+                      }).length;
+
                       return (
                         <button
                           key={sub}
@@ -284,15 +289,25 @@ export default function CategoryPage({ addToCart }: CategoryPageProps) {
                               : "text-stone-700 hover:bg-slate-50 hover:text-[#5794ff] border border-transparent hover:border-slate-200"
                           )}
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
                             <span className="text-lg shrink-0 leading-none group-hover:scale-110 transition-transform">
                               {icon}
                             </span>
                             <span className="truncate">{label}</span>
                           </div>
-                          {isActive && (
-                            <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-sm">✕</span>
-                          )}
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {subCount > 0 && (
+                              <span className={cn(
+                                "text-[10px] px-1.5 py-0.5 rounded-full font-bold",
+                                isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-700"
+                              )}>
+                                {subCount}
+                              </span>
+                            )}
+                            {isActive && (
+                              <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-sm">✕</span>
+                            )}
+                          </div>
                         </button>
                       );
                     })}

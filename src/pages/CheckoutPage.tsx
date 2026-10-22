@@ -147,8 +147,8 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
             تم استلام طلبك بنجاح
           </span>
 
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 mb-2">
-            شكراً لطلبك من مكتبة الهدى!
+          <h1 className="text-3xl sm:text-4xl font-black text-stone-900 mb-2">
+            شكراً لطلبك من بن عمار للمكتبية و الإعلامية!
           </h1>
           <p className="text-slate-500 font-medium mb-8">
             رقم الطلب الخاص بك هو <span className="font-black text-[#5794ff] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200 text-lg dir-ltr">{orderSuccess.id}</span>. سنقوم بالتواصل معك لتأكيد موعد التوصيل.
@@ -207,8 +207,8 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
           <ShoppingBag size={48} />
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-3">سلة المشتريات فارغة</h1>
-        <p className="text-slate-500 font-medium mb-8 max-w-md">
-          لم تقم بإضافة أي منتجات إلى السلة بعد. تصفح تشكيلات مكتبة الهدى المميزة واختر ما يناسبك!
+        <p className="text-stone-500 font-medium mb-8 max-w-md">
+          لم تقم بإضافة أي منتجات إلى السلة بعد. تصفح تشكيلات بن عمار للمكتبية و الإعلامية المميزة واختر ما يناسبك!
         </p>
         <Link 
           to="/" 
@@ -608,9 +608,9 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
                   )}
                 </button>
 
-                <div className="flex items-center justify-center gap-2 text-slate-400 text-[11px] font-medium">
+                <div className="flex items-center justify-center gap-2 text-stone-400 text-[11px] font-medium">
                   <ShieldCheck size={14} className="text-[#D4AF37]" />
-                  <span>ضمان الجودة والأصالة من مكتبة الهدى</span>
+                  <span>ضمان الجودة والأصالة من بن عمار للمكتبية و الإعلامية</span>
                 </div>
               </div>
 

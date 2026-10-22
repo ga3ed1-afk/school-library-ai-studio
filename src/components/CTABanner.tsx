@@ -2,16 +2,26 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useStoreTheme } from '../context/ThemeContext';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export default function CTABanner() {
+  const { config } = useStoreTheme();
+
   return (
     <section className="py-2.5 bg-transparent overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-2 sm:px-4 lg:px-6">
         <div 
-          className="relative overflow-hidden rounded-md text-white px-4 py-3 sm:py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg shadow-blue-500/15 border border-white/30"
-          style={{
-            background: `linear-gradient(135deg, #5794ff 0%, #3b7ef5 50%, #2563eb 100%)`
-          }}
+          className={cn(
+            "relative overflow-hidden text-white px-4 py-3.5 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg border border-white/20 transition-all duration-300",
+            config.cardRadius || "rounded-md",
+            `bg-gradient-to-r ${config.bannerGradient || 'from-purple-800 to-stone-900'}`
+          )}
         >
           {/* Ambient Glow */}
           <div className="absolute top-0 right-0 w-48 h-48 bg-white/20 rounded-full blur-xl pointer-events-none" />
@@ -23,20 +33,20 @@ export default function CTABanner() {
               <span>عرض حصري وفاخر</span>
             </span>
             <span className="text-xs sm:text-sm lg:text-base font-black text-white">
-              احصل على خصم <span className="text-[#DFB15B] font-black text-sm sm:text-base">25%</span> على جميع المستلزمات والدفاتر
+              احصل على خصم <span className="text-amber-300 font-black text-sm sm:text-base">25%</span> على جميع اللوازم المكتبية والمدرسية وتجهيزات الإعلامية
             </span>
-            <span className="hidden md:inline text-xs text-blue-100 font-medium border-r border-white/20 pr-2.5">
-              تشكيلة مكتبة الهدى الأفضل والأكثر موثوقية
+            <span className="hidden md:inline text-xs text-purple-100 font-medium border-r border-white/20 pr-2.5">
+              تشكيلة بن عمار للمكتبية و الإعلامية الأفضل والأكثر موثوقية
             </span>
           </div>
 
           <div className="relative z-10 shrink-0 self-end sm:self-auto">
             <Link 
               to="/category/الكل" 
-              className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#DFB15B] via-[#D4AF37] to-[#B8860B] hover:brightness-110 text-slate-950 px-4 py-1.5 rounded-md font-black text-xs transition-all shadow-md group cursor-pointer"
+              className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 hover:brightness-110 text-stone-950 px-4 py-1.5 rounded-md font-black text-xs transition-all shadow-md group cursor-pointer"
             >
               <span>تسوق الآن</span>
-              <ArrowRight size={14} className="rotate-180 group-hover:-translate-x-0.5 transition-transform text-slate-950" />
+              <ArrowRight size={14} className="rotate-180 group-hover:-translate-x-0.5 transition-transform text-stone-950" />
             </Link>
           </div>
         </div>
@@ -44,4 +54,3 @@ export default function CTABanner() {
     </section>
   );
 }
-

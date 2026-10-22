@@ -1,20 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Alex+Brush&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --color-oxford-blue: #5794ff; /* User specified blue */
-  --color-oxford-navy: #3b7ef5; /* Royal Blue */
-  --color-oxford-gold: #D4AF37; /* Luxury Royal Gold */
-  --color-oxford-gold-light: #F3E5AB; /* Champagne Gold */
-  --color-oxford-gold-dark: #B8860B; /* Deep Antique Gold */
-  --color-oxford-amber: #D97706;
-  --color-oxford-purple: #4383f5;
-  --color-oxford-violet: #2563eb;
-  --color-oxford-red: #D4AF37; /* Gold accent replacement for red */
-  --color-oxford-coral: #E5C07B;
-  --color-oxford-dark: #1e3a8a;
-  
+  --color-oxford-purple: oklch(54.1% 0.281 293.009);
+  --color-oxford-accent: oklch(0.54 0.28 290.94 / 0.85);
+  --color-oxford-blue: oklch(54.1% 0.281 293.009);
+  --color-oxford-navy: oklch(48% 0.26 290);
+  --color-oxford-gold: #D4AF37;
+  --color-oxford-gold-light: #F3E5AB;
+  --color-oxford-gold-dark: #B8860B;
+  --color-oxford-red: oklch(54.1% 0.281 293.009);
+  --color-stone-bg: #F5F5F4;
+}
+
+:root {
+  --theme-header-bg: oklch(54.1% 0.281 293.009);
+  --theme-header-accent: oklch(0.54 0.28 290.94 / 0.85);
+  --theme-accent-touch: oklch(0.54 0.28 290.94 / 0.85);
 }
 
 html, body, button, input, select, textarea, p, span, h1, h2, h3, h4, h5, h6, a, label, table, th, td {
@@ -32,27 +35,43 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1.font-black, h2.font-black, h3.font-black, h4.font-black, h5.font-black, h6.font-black {
-  font-weight: 700 !important;
+  font-weight: 800 !important;
 }
 
 h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bold {
-  font-weight: 600 !important;
+  font-weight: 700 !important;
 }
 
 @layer base {
   html {
     direction: rtl;
     font-family: 'Cairo', system-ui, sans-serif;
-    background-color: #F8FAFC;
+    background-color: #fafaf9; /* stone-50 */
   }
   body {
     font-family: 'Cairo', system-ui, sans-serif;
-    background-color: #F8FAFC;
-    color: #1e293b;
+    background-color: #fafaf9; /* stone-50 */
+    color: #1c1917; /* stone-900 */
   }
 }
 
 @layer utilities {
+  .bg-theme-header {
+    background-color: oklch(54.1% 0.281 293.009);
+  }
+  
+  .border-theme-accent {
+    border-color: oklch(0.54 0.28 290.94 / 0.85);
+  }
+
+  .text-theme-purple {
+    color: oklch(54.1% 0.281 293.009);
+  }
+
+  .bg-theme-purple {
+    background-color: oklch(54.1% 0.281 293.009);
+  }
+
   .animate-marquee {
     animation: marquee 25s linear infinite;
   }
@@ -76,9 +95,9 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     border-radius: 8px;
   }
 
-  /* Luxury Blue & Gold gradient utility classes */
+  /* Luxury Violet & Gold gradient utility classes */
   .bg-vivago-gradient {
-    background: linear-gradient(135deg, #5794ff 0%, #3b7ef5 50%, #D4AF37 100%);
+    background: linear-gradient(135deg, oklch(54.1% 0.281 293.009) 0%, oklch(48% 0.26 290) 50%, #D4AF37 100%);
   }
 
   .bg-vivago-btn {
@@ -102,7 +121,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     position: relative;
     padding-right: 1.25rem;
     margin-bottom: 0.35rem;
-    color: #1E293B;
+    color: #1C1917;
     font-size: 0.875rem;
     line-height: 1.5;
     font-weight: 500;
@@ -116,7 +135,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: #D4AF37;
+    background-color: oklch(54.1% 0.281 293.009);
   }
 
   .list-colors {
@@ -140,7 +159,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .list-colors li.active span {
-    outline: 2px solid #D4AF37;
+    outline: 2px solid oklch(54.1% 0.281 293.009);
     outline-offset: 2px;
   }
 
@@ -160,9 +179,9 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     justify-content: center;
     padding: 0.45rem 1rem;
     border-radius: 8px;
-    border: 1.5px solid #CBD5E1;
+    border: 1.5px solid #E7E5E4;
     background-color: #ffffff;
-    color: #0F1E36;
+    color: #1C1917;
     font-size: 0.8125rem;
     font-weight: 700;
     cursor: pointer;
@@ -171,15 +190,15 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .list-styles li:hover, .list-sizes li:hover {
-    border-color: #D4AF37;
-    color: #B8860B;
+    border-color: oklch(54.1% 0.281 293.009);
+    color: oklch(54.1% 0.281 293.009);
   }
 
   .list-styles li.active, .list-sizes li.active {
-    border-color: #D4AF37;
-    background-color: #FEF9C3;
-    color: #92400E;
-    box-shadow: 0 1px 2px rgba(212, 175, 55, 0.2);
+    border-color: oklch(54.1% 0.281 293.009);
+    background-color: #FAF5FF;
+    color: oklch(48% 0.26 290);
+    box-shadow: 0 1px 2px rgba(142, 36, 255, 0.15);
   }
 
   .btn.btn-cart {
@@ -189,9 +208,9 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     gap: 0.5rem;
     height: 44px;
     border-radius: 8px;
-    border: 1.5px solid #5794ff;
+    border: 1.5px solid oklch(54.1% 0.281 293.009);
     background-color: #ffffff;
-    color: #5794ff;
+    color: oklch(54.1% 0.281 293.009);
     font-size: 0.9rem;
     font-weight: 800;
     cursor: pointer;
@@ -199,10 +218,10 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .btn.btn-cart:hover {
-    background-color: #5794ff;
+    background-color: oklch(54.1% 0.281 293.009);
     color: #ffffff;
-    border-color: #5794ff;
-    box-shadow: 0 4px 12px rgba(87, 148, 255, 0.35);
+    border-color: oklch(54.1% 0.281 293.009);
+    box-shadow: 0 4px 12px oklch(0.54 0.28 290.94 / 0.35);
   }
 
   .btn.btn-buy {
@@ -213,19 +232,19 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     height: 44px;
     border-radius: 8px;
     border: none;
-    background: linear-gradient(135deg, #DFB15B 0%, #D4AF37 50%, #B8860B 100%);
-    color: #0A192F;
+    background: linear-gradient(135deg, oklch(54.1% 0.281 293.009) 0%, oklch(48% 0.26 290) 100%);
+    color: #FFFFFF;
     font-size: 0.9rem;
     font-weight: 900;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+    box-shadow: 0 4px 14px oklch(0.54 0.28 290.94 / 0.35);
   }
 
   .btn.btn-buy:hover {
-    background: linear-gradient(135deg, #D4AF37 0%, #C5A059 50%, #A16207 100%);
+    background: linear-gradient(135deg, oklch(58% 0.28 295) 0%, oklch(52% 0.27 292) 100%);
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
+    box-shadow: 0 6px 20px oklch(0.54 0.28 290.94 / 0.45);
   }
 
   /* Shopify Product Form Input & Variants */
@@ -238,7 +257,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   .variants-label {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #1e293b;
+    color: #1C1917;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
@@ -247,7 +266,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
 
   .variants-label__value {
     font-weight: 600;
-    color: #B8860B;
+    color: oklch(54.1% 0.281 293.009);
   }
 
   .product-form__container {
@@ -276,9 +295,9 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     height: 42px;
     padding: 0 18px;
     border-radius: 8px;
-    border: 1px solid #CBD5E1;
+    border: 1px solid #E7E5E4;
     background-color: #FFFFFF;
-    color: #1E293B;
+    color: #1C1917;
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
@@ -287,18 +306,18 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .product-form__item--zoom label:hover {
-    border-color: #5794ff;
-    color: #5794ff;
+    border-color: oklch(54.1% 0.281 293.009);
+    color: oklch(54.1% 0.281 293.009);
     transform: translateY(-1px);
   }
 
   .product-form__item input[type="radio"]:checked + label {
-    border-color: #5794ff;
+    border-color: oklch(54.1% 0.281 293.009);
     border-width: 2px;
-    color: #5794ff;
-    background-color: #eff6ff;
+    color: oklch(54.1% 0.281 293.009);
+    background-color: #FAF5FF;
     font-weight: 800;
-    box-shadow: 0 1px 3px rgba(87, 148, 255, 0.25);
+    box-shadow: 0 1px 3px oklch(0.54 0.28 290.94 / 0.25);
   }
 
   /* Product Buttons / Add to Cart & Buy Now */
@@ -328,7 +347,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     width: 110px;
     min-width: 105px;
     height: 40px;
-    border: 1px solid #CBD5E1;
+    border: 1px solid #E7E5E4;
     border-radius: 8px;
     background: #FFFFFF;
     flex-shrink: 0;
@@ -349,13 +368,13 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     background: transparent;
     border: none;
     cursor: pointer;
-    color: #5794ff;
+    color: oklch(54.1% 0.281 293.009);
     transition: background-color 0.15s ease;
   }
 
   .quantity__button:hover {
-    background-color: #eff6ff;
-    color: #3b7ef5;
+    background-color: #FAF5FF;
+    color: oklch(48% 0.26 290);
   }
 
   .quantity__button svg {
@@ -371,7 +390,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     text-align: center;
     font-size: 0.875rem;
     font-weight: 700;
-    color: #1e293b;
+    color: #1C1917;
     border: none;
     background: transparent;
     outline: none;
@@ -391,10 +410,10 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    border: 1.5px solid #5794ff;
+    border: 1.5px solid oklch(54.1% 0.281 293.009);
     border-radius: 8px;
     background-color: #FFFFFF;
-    color: #5794ff;
+    color: oklch(54.1% 0.281 293.009);
     font-size: 0.875rem;
     font-weight: 700;
     cursor: pointer;
@@ -409,7 +428,7 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
   }
 
   .product-form__submit:hover {
-    background-color: #5794ff;
+    background-color: oklch(54.1% 0.281 293.009);
     color: #ffffff;
   }
 
@@ -435,20 +454,19 @@ h1.font-bold, h2.font-bold, h3.font-bold, h4.font-bold, h5.font-bold, h6.font-bo
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #DFB15B 0%, #D4AF37 50%, #B8860B 100%);
-    color: #0A192F;
+    background: linear-gradient(135deg, oklch(54.1% 0.281 293.009) 0%, oklch(48% 0.26 290) 100%);
+    color: #FFFFFF;
     font-size: 0.9rem;
     font-weight: 900;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 2px 8px oklch(0.54 0.28 290.94 / 0.3);
   }
 
   .shopify-payment-button__button:hover {
-    background: linear-gradient(135deg, #D4AF37 0%, #C5A059 50%, #A16207 100%);
-    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.45);
+    background: linear-gradient(135deg, oklch(58% 0.28 295) 0%, oklch(52% 0.27 292) 100%);
+    box-shadow: 0 4px 14px oklch(0.54 0.28 290.94 / 0.45);
   }
 }
-

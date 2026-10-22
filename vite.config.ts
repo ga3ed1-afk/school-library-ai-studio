@@ -20,6 +20,20 @@ export default defineConfig(({mode}) => {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
+      proxy: {
+        '/api/juicer-proxy': {
+          target: 'https://www.juicer.io',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/api\/juicer-proxy/, '/api'),
+        },
+        '/api/juicer-v1-proxy': {
+          target: 'https://api.juicer.io',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/api\/juicer-v1-proxy/, '/v1'),
+        },
+      },
     },
   };
 });
