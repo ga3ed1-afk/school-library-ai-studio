@@ -463,31 +463,34 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
 
             <div className="border-b border-slate-200/80 mb-4"></div>
 
-            {/* Price Box */}
-            <div className="box-product-price flex items-baseline gap-3 mb-4 p-4 rounded-xs bg-white border border-slate-200/90 shadow-2xs">
-              <span className="text-3xl font-black text-red-600 price-main tracking-tight">
-                {(Number(product.price) || 0).toFixed(3)} <span className="text-base font-bold text-red-600">د.ت</span>
-              </span>
-              {Number(oldPrice) > (Number(product.price) || 0) && (
-                <span className="text-lg text-stone-400 line-through font-bold price-line">
-                  {Number(oldPrice).toFixed(3)} د.ت
+            {/* Unified Price & Description Container with single White Background */}
+            <div className="mb-5 p-4 sm:p-5 rounded-lg bg-white border border-slate-200/90 shadow-2xs space-y-3">
+              {/* Price Row */}
+              <div className="box-product-price flex flex-wrap items-baseline gap-3">
+                <span className="text-3xl font-black text-red-600 price-main tracking-tight">
+                  {(Number(product.price) || 0).toFixed(3)} <span className="text-base font-bold text-red-600">د.ت</span>
                 </span>
-              )}
-              {product.minPrice !== undefined && product.maxPrice !== undefined && (
-                <span className="text-xs font-bold bg-red-50 text-red-600 px-3 py-1 rounded-full border border-red-200/60 ms-auto">
-                  النطاق: {(Number(product.minPrice) || 0).toFixed(3)} د.ت إلى {(Number(product.maxPrice) || 0).toFixed(3)} د.ت
-                </span>
+                {Number(oldPrice) > (Number(product.price) || 0) && (
+                  <span className="text-lg text-stone-400 line-through font-bold price-line">
+                    {Number(oldPrice).toFixed(3)} د.ت
+                  </span>
+                )}
+                {product.minPrice !== undefined && product.maxPrice !== undefined && (
+                  <span className="text-xs font-bold bg-red-50 text-red-600 px-3 py-1 rounded-full border border-red-200/60 ms-auto">
+                    النطاق: {(Number(product.minPrice) || 0).toFixed(3)} د.ت إلى {(Number(product.maxPrice) || 0).toFixed(3)} د.ت
+                  </span>
+                )}
+              </div>
+
+              {/* Description without divider, on same white background with deep clear contrast */}
+              {product.description && (
+                <div className="product-description pt-0.5">
+                  <p className="text-xs sm:text-[13.5px] font-semibold leading-relaxed text-black text-stone-950 whitespace-pre-line">
+                    {product.description}
+                  </p>
+                </div>
               )}
             </div>
-
-            {/* Description */}
-            {product.description && (
-              <div className="product-description mb-5 text-stone-700 bg-stone-50/70 p-4 rounded-lg border border-stone-200/70 shadow-2xs">
-                <p className="text-sm sm:text-base font-normal leading-relaxed text-stone-800 whitespace-pre-line">
-                  {product.description}
-                </p>
-              </div>
-            )}
 
             {/* Bullet points (Only rendered if product has actual features/bullet points) */}
             {bulletPoints.length > 0 && (
