@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, Check, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Product } from '../types';
+import { productService } from '../services/productService';
 
 interface SchoolPack {
   id: string;
@@ -15,100 +16,58 @@ interface SchoolPack {
   productsToAdd: Omit<Product, 'reviews'>[];
 }
 
-const SCHOOL_PACKS: SchoolPack[] = [
-  {
-    id: 'pack-primaire',
-    title: 'حزمة العودة المدرسية - المرحلة الابتدائية',
-    level: 'السنوات من 1 إلى 6 ابتدائي',
-    badge: 'الأكثر طلباً',
-    originalPrice: 85.000,
-    discountPrice: 69.500,
-    image: 'https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?auto=format&fit=crop&q=80&w=600',
-    description: 'تتضمن كامل اللوازم الأساسية للتعليم الابتدائي بجودة أكسفورد لحماية كراسات التلميذ طيلة العام الدراسي.',
-    items: [
-      { name: '4 كراسات أكسفورد 96 صفحة مسطرة فرنسية', qty: '4 قطع' },
-      { name: '2 كراس أكسفورد رسم وتلوين', qty: '2 قطع' },
-      { name: 'طقم أقلام حبر جاف أزرق وأحمر وأخضر', qty: '1 طقم' },
-      { name: 'علبة أقلام تلوين خشبية (12 لوناً)', qty: '1 علبة' },
-      { name: 'مجموعة هندسة وأدوات قياس مدرسية', qty: '1 طقم' },
-      { name: 'مقلمة قماشية متينة ومقاومة للماء', qty: '1 قطعة' }
-    ],
-    productsToAdd: [
-      {
-        id: 901,
-        name: 'باقة الابتدائي الشاملة أكسفورد (دفاتر + أدوات + مقلمة)',
-        price: 69.500,
-        category: 'اللوازم المدرسية',
-        image: 'https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?auto=format&fit=crop&q=80&w=600',
-        description: 'حزمة الأدوات المدرسية الابتدائية كاملة موفرة بنسبة 18%'
-      }
-    ]
-  },
-  {
-    id: 'pack-college',
-    title: 'حزمة المرحلة الإعدادية المتكاملة',
-    level: 'السنوات 7 و 8 و 9 أساسي',
-    badge: 'توفير 20%',
-    originalPrice: 110.000,
-    discountPrice: 88.000,
-    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600',
-    description: 'مجموعة شاملة لكراسات الحجم الكبير A4 ومستلزمات الرياضيات والعلوم الموجهة لتلاميذ الإعدادي.',
-    items: [
-      { name: '6 دفاتر أكسفورد A4 كلاسيك 144 صفحة', qty: '6 قطع' },
-      { name: 'طقم هندسة دقيق مقاوم للكسر', qty: '1 طقم' },
-      { name: 'آلة حاسبة علمية قياسية', qty: '1 قطعة' },
-      { name: 'طقم أقلام تمييز نيون (4 ألوان)', qty: '1 طقم' },
-      { name: 'حافظة مستندات ومصنف بلاستيكي أكسفورد', qty: '2 قطع' }
-    ],
-    productsToAdd: [
-      {
-        id: 902,
-        name: 'باقة الإعدادي المتكاملة أكسفورد (دفاتر A4 + أدوات رياضيات)',
-        price: 88.000,
-        category: 'اللوازم المدرسية',
-        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600',
-        description: 'حزمة المرحلة الإعدادية الشاملة مع دفاتر A4 وأدوات الرياضيات'
-      }
-    ]
-  },
-  {
-    id: 'pack-lycee',
-    title: 'حزمة الثانوي والبكالوريا الفاخرة',
-    level: 'السنوات الثانوية وجميع شعب البكالوريا',
-    badge: 'باقة الامتياز',
-    originalPrice: 135.000,
-    discountPrice: 109.000,
-    image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&q=80&w=600',
-    description: 'مجهزة خصيصاً للمراجعة المكثفة، كراسات سميكة بجودة الورق 90 غرام، ومصنفات لتنظيم الملخصات.',
-    items: [
-      { name: '8 دفاتر أكسفورد لولبية A4 فاخرة 200 صفحة', qty: '8 قطع' },
-      { name: 'مجموعة مصنفات وفواصل تنظيم الدروس أكسفورد', qty: '3 قطع' },
-      { name: 'طقم أقلام جل سريعة الجفاف للملخصات', qty: '1 طقم' },
-      { name: 'أوراق ملحوظات لاصقة ومؤشرات صفحات ملونة', qty: '1 مجموعة' },
-      { name: 'محفظة أدوات جلدية فاخرة', qty: '1 قطعة' }
-    ],
-    productsToAdd: [
-      {
-        id: 903,
-        name: 'باقة البكالوريا والثانوي أكسفورد (دفاتر لولبية A4 + مصنفات)',
-        price: 109.000,
-        category: 'اللوازم المدرسية',
-        image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&q=80&w=600',
-        description: 'حزمة البكالوريا الشاملة مع دفاتر لولبية A4 ومصنفات تنظيم الدروس'
-      }
-    ]
-  }
-];
+const DEFAULT_SCHOOL_PACKS: SchoolPack[] = [];
 
 interface SchoolPacksProps {
   addToCart: (product: Product, quantity?: number) => void;
 }
 
 export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
-  const [selectedPackId, setSelectedPackId] = useState<string>('pack-primaire');
+  const [packs, setPacks] = useState<SchoolPack[]>([]);
+  const [selectedPackId, setSelectedPackId] = useState<string>('');
   const [addedSuccessId, setAddedSuccessId] = useState<string | null>(null);
 
-  const activePack = SCHOOL_PACKS.find(p => p.id === selectedPackId) || SCHOOL_PACKS[0];
+  useEffect(() => {
+    const loadPacks = () => {
+      const allProducts = productService.getProducts();
+      // Find real products that are packs or school supply bundles
+      const packProducts = allProducts.filter(p => 
+        p.name.includes('باقة') || 
+        p.name.includes('حزمة') || 
+        p.category === 'باقات' ||
+        (p.tags && p.tags.includes('باقة'))
+      );
+
+      if (packProducts.length > 0) {
+        const mappedPacks: SchoolPack[] = packProducts.map(p => ({
+          id: `pack-${p.id}`,
+          title: p.name,
+          level: p.category || 'عرض خاص',
+          badge: p.discount ? `تخفيض ${p.discount}%` : 'باقة متكاملة',
+          originalPrice: p.compareAtPrice || p.price,
+          discountPrice: p.price,
+          image: p.image || '/logo.svg',
+          description: p.description || p.name,
+          items: [{ name: p.name, qty: '1 باقة' }],
+          productsToAdd: [p]
+        }));
+        setPacks(mappedPacks);
+        setSelectedPackId(mappedPacks[0].id);
+      } else {
+        setPacks([]);
+      }
+    };
+
+    loadPacks();
+    window.addEventListener('products_updated', loadPacks);
+    return () => window.removeEventListener('products_updated', loadPacks);
+  }, []);
+
+  if (packs.length === 0) {
+    return null; // Do not show fake mock packs if merchant has not defined any packs
+  }
+
+  const activePack = packs.find(p => p.id === selectedPackId) || packs[0];
 
   const handleAddPack = (pack: SchoolPack) => {
     pack.productsToAdd.forEach(item => {
@@ -138,7 +97,7 @@ export default function SchoolPacks({ addToCart }: SchoolPacksProps) {
 
         {/* Level Tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          {SCHOOL_PACKS.map(pack => {
+          {packs.map(pack => {
             const isSelected = pack.id === selectedPackId;
             return (
               <button

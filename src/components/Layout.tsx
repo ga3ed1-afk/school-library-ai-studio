@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Search, Menu, X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, User, Heart, Phone, MapPin, Mail, Facebook, Instagram, Twitter, LayoutDashboard, LogOut, Truck, Palette } from 'lucide-react';
 import LoginModal from './LoginModal';
 import StyleSwitcherModal from './StyleSwitcherModal';
@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { brands, categories } from '../constants';
 import { Product, CartItem } from '../types';
+import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -33,10 +35,27 @@ export default function Layout({ children, cart, setCart, searchQuery, setSearch
   const navigate = useNavigate();
   const location = useLocation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleOpenCart = () => setIsCartOpen(true);
     window.addEventListener('open_cart', handleOpenCart);
-    return () => window.removeEventListener('open_cart', handleOpenCart);
+
+    // Sync Firebase Auth state
+    const unsubscribeAuth = onAuthStateChanged(auth, (fbUser) => {
+      if (fbUser) {
+        setUser({
+          name: fbUser.displayName || fbUser.email?.split('@')[0] || 'حريف',
+          email: fbUser.email,
+          uid: fbUser.uid
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      window.removeEventListener('open_cart', handleOpenCart);
+      unsubscribeAuth();
+    };
   }, []);
 
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -137,20 +156,22 @@ export default function Layout({ children, cart, setCart, searchQuery, setSearch
                 <span className="hidden sm:inline">الستايل ({config.name.split(' ')[0]})</span>
               </button>
 
-              <Link
-                to="/track-order"
+              <a
+                href="https://www.facebook.com/profile.php?id=100063679074454"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={cn(
                   "hidden md:flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-colors border shadow-xs text-stone-950 bg-amber-300 hover:bg-amber-200 border-amber-400",
                   config.btnRadius || "rounded-xs"
                 )}
-                title="تتبع مسار طلبيتك"
+                title="صفحتنا على فيسبوك"
               >
-                <Truck size={17} className="text-stone-950" />
-                <span>تتبع الطلب</span>
-              </Link>
+                <Facebook size={17} className="text-stone-950" />
+                <span>فيسبوك</span>
+              </a>
 
               <button 
-                onClick={() => user ? setUser(null) : setIsLoginModalOpen(true)}
+                onClick={() => user ? signOut(auth).catch(() => setUser(null)) : setIsLoginModalOpen(true)}
                 className={cn("hidden sm:flex p-2 transition-colors items-center gap-2 text-white hover:bg-white/15", config.btnRadius || "rounded-xs")}
               >
                 {user ? (
@@ -288,16 +309,32 @@ export default function Layout({ children, cart, setCart, searchQuery, setSearch
                 بن عمار للمكتبية و الإعلامية . نوفر لكم أحدث التجهيزات الإعلامية والمكتبية، واللوازم المدرسية بأعلى جودة وأفضل الأسعار.
               </p>
               <div className="flex gap-3">
-                {[Facebook, Instagram, Twitter].map((Icon, i) => (
-                  <a 
-                    key={i} 
-                    href="#" 
-                    className="w-10 h-10 rounded-xs bg-white/10 flex items-center justify-center text-white hover:text-white transition-all group border border-white/15"
-                    style={{ backgroundColor: 'oklch(54.1% 0.281 293.009)' }}
-                  >
-                    <Icon size={18} className="group-hover:scale-110 transition-transform" />
-                  </a>
-                ))}
+                <a 
+                  href="https://www.facebook.com/profile.php?id=100063679074454" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-xs bg-white/10 flex items-center justify-center text-white hover:brightness-125 transition-all group border border-white/15"
+                  style={{ backgroundColor: 'oklch(54.1% 0.281 293.009)' }}
+                  title="صفحتنا على فيسبوك"
+                >
+                  <Facebook size={18} className="group-hover:scale-110 transition-transform" />
+                </a>
+                <a 
+                  href="https://wa.me/21693997226" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-xs bg-[#25D366] flex items-center justify-center text-white hover:brightness-110 transition-all group border border-white/15"
+                  title="تواصل معنا عبر واتساب"
+                >
+                  <Phone size={17} className="group-hover:scale-110 transition-transform" />
+                </a>
+                <a 
+                  href="mailto:infobenammar1@gmail.com" 
+                  className="w-10 h-10 rounded-xs bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all group border border-white/15"
+                  title="راسلنا عبر البريد الإلكتروني"
+                >
+                  <Mail size={18} className="group-hover:scale-110 transition-transform" />
+                </a>
               </div>
             </div>
 
@@ -543,14 +580,16 @@ export default function Layout({ children, cart, setCart, searchQuery, setSearch
               </div>
               <div className="flex-1 overflow-y-auto p-5">
                 <div className="space-y-3">
-                  <Link
-                    to="/track-order"
+                  <a
+                    href="https://www.facebook.com/profile.php?id=100063679074454"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() => setIsMenuOpen(false)}
                     className="w-full flex items-center gap-3 p-3 rounded-md text-right font-bold transition-all bg-white/15 text-white hover:bg-white/25 mb-4 text-xs border border-white/20"
                   >
-                    <Truck size={20} className="text-amber-200" />
-                    تتبع طلبيتك
-                  </Link>
+                    <Facebook size={20} className="text-amber-200 fill-current" />
+                    صفحتنا على فيسبوك
+                  </a>
                   {allCategories.map((cat) => (
                     <div key={cat.name} className="space-y-1.5">
                       <Link

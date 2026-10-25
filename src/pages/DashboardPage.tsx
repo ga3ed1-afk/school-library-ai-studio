@@ -59,6 +59,7 @@ import { productService } from '../services/productService';
 import { orderService, CustomerOrder } from '../services/orderService';
 import { partnerService, Partner } from '../services/partnerService';
 import FacebookImporter from '../components/FacebookImporter';
+import StoreSettingsPanel from '../components/StoreSettingsPanel';
 import {
   parseCsvRows,
   autoDetectColumnMapping,
@@ -73,13 +74,6 @@ const data = [
   { name: 'أبريل', sales: 2780, orders: 210 },
   { name: 'مايو', sales: 1890, orders: 120 },
   { name: 'يونيو', sales: 2390, orders: 170 },
-];
-
-const recentOrders = [
-  { id: '#ORD-7281', customer: 'أحمد بن علي', date: '2024-03-20', total: 125.500, status: 'تم التوصيل' },
-  { id: '#ORD-7282', customer: 'سارة محمد', date: '2024-03-21', total: 45.000, status: 'قيد المعالجة' },
-  { id: '#ORD-7283', customer: 'ياسين بن عمر', date: '2024-03-21', total: 89.900, status: 'تم الشحن' },
-  { id: '#ORD-7284', customer: 'ليلى بن صالح', date: '2024-03-22', total: 210.000, status: 'قيد المعالجة' },
 ];
 
 export const COLOR_PRESETS = [
@@ -99,7 +93,7 @@ export const COLOR_PRESETS = [
 export default function DashboardPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTab = (searchParams.get('tab') as any) || 'overview';
-  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'add-product' | 'products-grid' | 'cart' | 'checkout' | 'edit-product' | 'order-details' | 'wishlist' | 'calendar' | 'gallery' | 'alerts' | 'projects' | 'mockups' | 'categories' | 'partners'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'add-product' | 'products-grid' | 'cart' | 'checkout' | 'edit-product' | 'order-details' | 'wishlist' | 'calendar' | 'gallery' | 'alerts' | 'projects' | 'mockups' | 'categories' | 'partners' | 'settings'>(initialTab);
 
   // Partners / Brands State
   const [partners, setPartners] = useState<Partner[]>(() => partnerService.getPartners());
@@ -1101,6 +1095,20 @@ export default function DashboardPage() {
                   </span>
                 </button>
               </li>
+              <li>
+                <button 
+                  onClick={() => handleTabChange('settings')}
+                  className={`w-full flex items-center justify-between p-3 rounded-md transition-all cursor-pointer ${activeTab === 'settings' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md' : 'hover:bg-indigo-50/50 text-stone-700 font-bold'}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <SlidersHorizontal className={`w-5 h-5 ${activeTab === 'settings' ? 'text-amber-300' : 'text-indigo-600'}`} />
+                    <span>إعدادات التجارة والشحن</span>
+                  </div>
+                  <span className={`text-[10px] font-black px-1.5 py-0.5 rounded ${activeTab === 'settings' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'}`}>
+                    التشغيل
+                  </span>
+                </button>
+              </li>
             </ul>
           </div>
           {/* CATEGORIES & SUBCATEGORIES SECTION */}
@@ -1312,6 +1320,8 @@ export default function DashboardPage() {
               {activeTab === 'projects' && 'المشاريع'}
               {activeTab === 'mockups' && 'نماذج العرض'}
               {activeTab === 'categories' && 'التصنيفات والفرعيات'}
+              {activeTab === 'partners' && 'شركاؤنا في النجاح'}
+              {activeTab === 'settings' && 'إعدادات المتجر والتوصيل'}
             </span>
           </div>
 
@@ -1921,6 +1931,15 @@ export default function DashboardPage() {
                 </div>
               </div>
             )}
+          </motion.div>
+        )}
+
+        {activeTab === 'settings' && (
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }} 
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <StoreSettingsPanel />
           </motion.div>
         )}
 

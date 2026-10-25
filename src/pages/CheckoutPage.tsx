@@ -15,11 +15,13 @@ import {
   Minus,
   Sparkles,
   ChevronRight,
-  PackageCheck
+  PackageCheck,
+  MessageCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CartItem } from '../types';
 import { orderService } from '../services/orderService';
+import { storeSettingsService } from '../services/storeSettingsService';
 
 interface CheckoutPageProps {
   cart: CartItem[];
@@ -29,12 +31,12 @@ interface CheckoutPageProps {
 export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
   const navigate = useNavigate();
 
-  // Form states
-  const [fullName, setFullName] = useState('أحمد بن علي');
-  const [phone, setPhone] = useState('+216 22 333 444');
-  const [address, setAddress] = useState('نهج الحبيب بورقيبة، تونس العاصمة');
-  const [city, setCity] = useState('تونس');
-  const [postalCode, setPostalCode] = useState('1000');
+  // Form states - Empty by default for real customer checkout
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('قبلي');
+  const [postalCode, setPostalCode] = useState('');
   const [notes, setNotes] = useState('');
   
   // Shipping & Payment selection
@@ -47,12 +49,24 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState('');
 
+  // Settings
+  const [storeSettings, setStoreSettings] = useState(() => storeSettingsService.getSettings());
+
+  React.useEffect(() => {
+    const handleSettingsUpdate = (e: any) => {
+      setStoreSettings(e.detail || storeSettingsService.getSettings());
+    };
+    window.addEventListener('store_settings_updated', handleSettingsUpdate);
+    return () => window.removeEventListener('store_settings_updated', handleSettingsUpdate);
+  }, []);
+
   // Submission state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState<any | null>(null);
 
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shippingCost = shippingMethod === 'express' ? 7.000 : 0.000;
+  const isFreeShipping = storeSettings.freeShippingThreshold > 0 && subtotal >= storeSettings.freeShippingThreshold;
+  const shippingCost = isFreeShipping ? 0.000 : (shippingMethod === 'express' ? storeSettings.shippingFee : 0.000);
   const total = Math.max(0, subtotal - discountAmount + (subtotal > 0 ? shippingCost : 0));
 
   const handleApplyPromo = (e: React.FormEvent) => {
@@ -124,13 +138,25 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
       setCart([]);
       setIsSubmitting(false);
       setOrderSuccess(newOrder);
+
+      // Track conversion
+      storeSettingsService.trackEvent('Purchase', {
+        content_name: 'Order Confirmation',
+        content_type: 'product',
+        value: newOrder.total,
+        currency: 'TND',
+        order_id: newOrder.id,
+        num_items: newOrder.items.length
+      });
     }, 1000);
   };
 
   // If order was successfully completed:
   if (orderSuccess) {
+    const whatsappUrl = storeSettingsService.generateWhatsappOrderLink(orderSuccess);
+
     return (
-      <div className="min-h-[75vh] flex items-center justify-center p-4 bg-[#F8FAFC] py-12 text-slate-900">
+      <div className="min-h-[75vh] flex items-center justify-center p-4 bg-[#F8FAFC] py-12 text-slate-900" dir="rtl">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -153,6 +179,26 @@ export default function CheckoutPage({ cart, setCart }: CheckoutPageProps) {
           <p className="text-slate-500 font-medium mb-8">
             رقم الطلب الخاص بك هو <span className="font-black text-[#5794ff] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200 text-lg dir-ltr">{orderSuccess.id}</span>. سنقوم بالتواصل معك لتأكيد موعد التوصيل.
           </p>
+
+          {/* High-Converting Direct WhatsApp Confirmation CTA */}
+          <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl mb-8 space-y-3">
+            <div className="flex items-center justify-center gap-2 text-emerald-800 font-black text-sm">
+              <MessageCircle size={18} className="text-emerald-600 animate-bounce" />
+              <span>تسريع معالجة الطلب عبر واتساب</span>
+            </div>
+            <p className="text-xs text-emerald-700 font-medium leading-relaxed max-w-lg mx-auto">
+              أرسل تفاصيل طلبيتك بنقرة واحدة إلى إدارة المتجر لتأكيد العنوان وبدء تجهيز طردك فوراً!
+            </p>
+            <a 
+              href={whatsappUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white px-7 py-3 rounded-lg font-black text-sm shadow-md shadow-emerald-600/30 hover:scale-102 active:scale-98 transition-all cursor-pointer"
+            >
+              <MessageCircle size={20} />
+              <span>تأكيد الطلبية عبر واتساب الآن 💬</span>
+            </a>
+          </div>
 
           {/* Order Details card */}
           <div className="bg-[#5794ff]/[0.03] rounded-md p-6 mb-8 text-right space-y-4 border border-slate-200/90 shadow-2xs">

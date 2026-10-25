@@ -436,7 +436,11 @@ export default function ProductPage({ addToCart }: ProductPageProps) {
                       <Star key={i} size={14} className="fill-current text-[#D4AF37]" />
                     ))}
                   </div>
-                  <span className="text-xs font-bold text-stone-500">({product.reviewsCount || 65} تقييمًا)</span>
+                  <span className="text-xs font-bold text-stone-500">
+                    {product.reviewsCount !== undefined && product.reviewsCount > 0 
+                      ? `(${product.reviewsCount} تقييمًا)` 
+                      : '(منتج أصلي)'}
+                  </span>
                 </div>
               </div>
               

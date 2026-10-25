@@ -209,7 +209,6 @@ export default function HomePage({ addToCart, setSelectedCategory }: HomePagePro
                   product={product} 
                   addToCart={addToCart}
                   priority={index < 4}
-                  hidePrice={true}
                 />
               ))}
             </div>

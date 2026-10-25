@@ -2,131 +2,46 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Star, Eye, ShoppingCart, ArrowRight, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
+import { productService } from '../services/productService';
 
 interface FeaturedBooksProps {
   addToCart?: (product: Product) => void;
 }
 
-const featuredBooksData = [
-  {
-    id: 101,
-    sku: "BK-101",
-    title: "مصحف التجويد والترتيل برواية ورش",
-    subtitle: "طبعة فاخرة ومذهبة 24/17",
-    price: 32.000,
-    oldPrice: 40.000,
-    author: "دار المعرفة",
-    image: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&q=80&w=800",
-    rating: 5,
-    badge: "الأكثر طلباً",
-    discount: "-20%"
-  },
-  {
-    id: 102,
-    sku: "BK-102",
-    title: "صحيح البخاري - الطبعة المحققة الكاملة",
-    subtitle: "مجلد فاخر تجليد أصلي",
-    price: 45.000,
-    oldPrice: 55.000,
-    author: "الإمام البخاري",
-    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800",
-    rating: 5,
-    badge: "مميز",
-    discount: "-18%"
-  },
-  {
-    id: 103,
-    sku: "BK-103",
-    title: "رياض الصالحين من كلام سيد المرسلين",
-    subtitle: "شرح وضبط وتحقيق معاصر",
-    price: 26.500,
-    oldPrice: 32.000,
-    author: "الإمام النووي",
-    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=800",
-    rating: 5,
-    badge: "إصدار منقح"
-  },
-  {
-    id: 104,
-    sku: "BK-104",
-    title: "الرحيق المختوم في سيرة النبي المأمون",
-    subtitle: "طبعة منقحة ملونة بالخرائط",
-    price: 22.000,
-    oldPrice: 28.000,
-    author: "صفي الرحمن المباركفوري",
-    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800",
-    rating: 5,
-    discount: "-21%"
-  },
-  {
-    id: 105,
-    sku: "BK-105",
-    title: "قصص الأنبياء - الحافظ ابن كثير",
-    subtitle: "طبعة محققة ومعتمدة",
-    price: 24.000,
-    oldPrice: 30.000,
-    author: "ابن كثير الدمشقي",
-    image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800",
-    rating: 5,
-    discount: "-20%"
-  },
-  {
-    id: 106,
-    sku: "BK-106",
-    title: "جامع الدروس العربية - موسوعة القواعد",
-    subtitle: "مرجع شامل للنحو والصرف",
-    price: 35.000,
-    oldPrice: 42.000,
-    author: "الشيخ مصطفى الغلاييني",
-    image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=800",
-    rating: 4,
-    badge: "مرجع علمي"
-  },
-  {
-    id: 107,
-    sku: "BK-107",
-    title: "معجم الطلاب الجامع الحديث",
-    subtitle: "عربي - عربي مع شرح وافٍ",
-    price: 28.000,
-    oldPrice: 34.000,
-    author: "نخبة من اللغويين",
-    image: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=800",
-    rating: 4,
-    discount: "-17%"
-  },
-  {
-    id: 108,
-    sku: "BK-108",
-    title: "أطلس العالم الجغرافي المصور للناشئة",
-    subtitle: "خرائط ملونة ومعلومات حديثة",
-    price: 29.500,
-    oldPrice: 36.000,
-    author: "قسم المطبوعات التعليمية",
-    image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=800",
-    rating: 5,
-    badge: "تربوي"
-  }
-];
-
-// Duplicate for infinite seamless auto-scrolling
-const displayBooks = [...featuredBooksData, ...featuredBooksData];
-
 export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [addedId, setAddedId] = useState<number | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [books, setBooks] = useState<Product[]>(() => {
+    return productService.getProducts().filter(p => 
+      p.category === 'الكتب' || 
+      (p.category && p.category.includes('كتب'))
+    );
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setBooks(
+        productService.getProducts().filter(p => 
+          p.category === 'الكتب' || 
+          (p.category && p.category.includes('كتب'))
+        )
+      );
+    };
+    window.addEventListener('products_updated', handleUpdate);
+    return () => window.removeEventListener('products_updated', handleUpdate);
+  }, []);
 
   // Automatic smooth scrolling with seamless wrap
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el) return;
+    if (!el || books.length <= 2) return;
 
     let animId: number;
     const speed = 0.8;
 
     const step = () => {
       if (!isHovered && el) {
-        // In RTL layout, scrollLeft moves negative or positive depending on browser implementation
         el.scrollLeft -= speed;
         const halfWidth = el.scrollWidth / 2;
         if (Math.abs(el.scrollLeft) >= halfWidth) {
@@ -141,7 +56,13 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
     return () => {
       cancelAnimationFrame(animId);
     };
-  }, [isHovered]);
+  }, [isHovered, books.length]);
+
+  if (books.length === 0) {
+    return null; // Don't show fake mock books if none exist in store
+  }
+
+  const displayBooks = books.length >= 4 ? [...books, ...books] : books;
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -150,18 +71,9 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
     }
   };
 
-  const handleAddToCart = (book: typeof featuredBooksData[0]) => {
+  const handleAddToCart = (book: Product) => {
     if (addToCart) {
-      const productObj: Product = {
-        id: book.id,
-        sku: book.sku,
-        name: book.title,
-        price: book.price,
-        description: book.subtitle,
-        image: book.image,
-        category: "الكتب"
-      };
-      addToCart(productObj);
+      addToCart(book);
       setAddedId(book.id);
       setTimeout(() => setAddedId(null), 1500);
     }
@@ -228,10 +140,10 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
             >
               {/* Image Container - Aspect 3/4 with tight clean styling */}
               <div className="relative aspect-[3/4] overflow-hidden bg-slate-50 rounded-t-xl">
-                <Link to={`/product/${book.id}`} className="block w-full h-full">
+                  <Link to={`/product/${book.id}`} className="block w-full h-full">
                   <img 
                     src={(book.image && book.image.trim() !== '') ? book.image.trim() : '/logo.svg'} 
-                    alt={book.title}
+                    alt={book.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     referrerPolicy="no-referrer"
                     loading="lazy"
@@ -240,14 +152,13 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
                 
                 {/* Badges */}
                 <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
-                  {book.badge && (
-                    <span className="bg-gradient-to-r from-[#5794ff] to-[#3b7ef5] text-white border border-white/30 text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider shadow-xs">
-                      {book.badge}
+                  {book.discount ? (
+                    <span className="bg-gradient-to-r from-red-600 to-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider shadow-xs">
+                      -{book.discount}%
                     </span>
-                  )}
-                  {book.discount && (
-                    <span className="bg-gradient-to-r from-[#DFB15B] to-[#B8860B] text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider shadow-xs">
-                      {book.discount}
+                  ) : (
+                    <span className="bg-gradient-to-r from-[#5794ff] to-[#3b7ef5] text-white border border-white/30 text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider shadow-xs">
+                      كتاب مميز
                     </span>
                   )}
                 </div>
@@ -268,31 +179,42 @@ export default function FeaturedBooks({ addToCart }: FeaturedBooksProps) {
               <div className="p-3.5 flex-1 flex flex-col justify-between bg-white">
                 <div>
                   <div className="flex items-center justify-between gap-1 mb-1.5">
-                    <span className="text-[10px] font-mono font-bold text-[#5794ff] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200/60">
-                      {book.sku}
-                    </span>
-                    <span className="text-slate-400 text-[11px] font-medium truncate max-w-[120px]">{book.subtitle}</span>
+                    {book.sku && (
+                      <span className="text-[10px] font-mono font-bold text-[#5794ff] bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-200/60">
+                        {book.sku}
+                      </span>
+                    )}
+                    <span className="text-slate-400 text-[11px] font-medium truncate max-w-[120px]">{book.category}</span>
                   </div>
 
                   <Link to={`/product/${book.id}`}>
                     <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-2 line-clamp-2 group-hover:text-[#5794ff] transition-colors leading-snug min-h-[2.6rem]">
-                      {book.title}
+                      {book.name}
                     </h3>
                   </Link>
                   
-                  {/* Price display - left empty as requested */}
-                  <div className="mb-3 min-h-[1.5rem]" />
+                  {/* Price */}
+                  <div className="mb-2 flex items-baseline gap-2">
+                    <span className="text-base font-black text-slate-950">
+                      {Number(book.price).toFixed(3)} <span className="text-xs font-normal text-slate-600">د.ت</span>
+                    </span>
+                    {book.compareAtPrice && book.compareAtPrice > book.price && (
+                      <span className="text-xs text-slate-400 line-through">
+                        {Number(book.compareAtPrice).toFixed(3)} د.ت
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 mb-3 text-xs">
-                    <span className="text-slate-600 font-bold truncate max-w-[140px]">{book.author}</span>
+                    <span className="text-slate-600 font-bold truncate max-w-[140px]">{book.brand || 'بن عمار'}</span>
                     <div className="flex gap-0.5 items-center">
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
                           size={11} 
-                          className={i < book.rating ? "fill-[#D4AF37] text-[#D4AF37]" : "text-stone-200"} 
+                          className={i < (book.rating || 5) ? "fill-[#D4AF37] text-[#D4AF37]" : "text-stone-200"} 
                         />
                       ))}
                     </div>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, CheckCircle2, Truck, ShieldCheck, ShoppingBag, ArrowRight } from 'lucide-react';
+import { X, CheckCircle2, Truck, ShieldCheck, ShoppingBag, ArrowRight, MessageCircle, Store } from 'lucide-react';
 import { Product } from '../types';
 import { orderService } from '../services/orderService';
+import { storeSettingsService } from '../services/storeSettingsService';
 import { Link } from 'react-router-dom';
 
 interface QuickOrderModalProps {
@@ -31,14 +32,20 @@ export default function QuickOrderModal({
 }: QuickOrderModalProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [city, setCity] = useState('تونس');
+  const [city, setCity] = useState('قبلي');
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
+  // Make delivery optional by default (calculate item only) as requested
+  const [includeShipping, setIncludeShipping] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderConfirmedId, setOrderConfirmedId] = useState<string | null>(null);
+  const [confirmedOrder, setConfirmedOrder] = useState<any | null>(null);
+
+  const storeSettings = storeSettingsService.getSettings();
+  const standardShippingFee = storeSettings.shippingFee || 7.000;
 
   const subtotal = product.price * quantity;
-  const shippingCost = subtotal >= 100 ? 0 : 7.000;
+  const isFreeThreshold = storeSettings.freeShippingThreshold > 0 && subtotal >= storeSettings.freeShippingThreshold;
+  const shippingCost = includeShipping ? (isFreeThreshold ? 0.000 : standardShippingFee) : 0.000;
   const total = subtotal + shippingCost;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -68,12 +75,20 @@ export default function QuickOrderModal({
         shipping: shippingCost,
         discount: 0,
         total,
-        shippingMethod: 'توصيل سريع لباب المنزل',
+        shippingMethod: includeShipping ? 'توصيل لكامل تراب الجمهورية' : 'استلام من المحل (بدون كلفة توصيل)',
         paymentMethod: 'الدفع عند الاستلام (COD)'
       });
 
+      // Track conversion if pixel active
+      storeSettingsService.trackEvent('Purchase', {
+        content_name: product.name,
+        value: total,
+        currency: 'TND',
+        order_id: newOrder.id
+      });
+
       setIsSubmitting(false);
-      setOrderConfirmedId(newOrder.id);
+      setConfirmedOrder(newOrder);
       if (onSuccess) {
         onSuccess(newOrder.id);
       }
@@ -81,11 +96,13 @@ export default function QuickOrderModal({
   };
 
   const handleReset = () => {
-    setOrderConfirmedId(null);
+    setConfirmedOrder(null);
+    setConfirmedOrder(null);
     setName('');
     setPhone('');
     setAddress('');
     setNotes('');
+    setIncludeShipping(false);
     onClose();
   };
 
@@ -130,7 +147,7 @@ export default function QuickOrderModal({
             </button>
           </div>
 
-          {orderConfirmedId ? (
+          {confirmedOrder ? (
             /* Order Success State */
             <div className="p-8 text-center space-y-5">
               <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner border border-emerald-100">
@@ -141,11 +158,27 @@ export default function QuickOrderModal({
                 <h4 className="text-2xl font-black text-stone-900 mb-2">تم تسجيل طلبك بنجاح!</h4>
                 <p className="text-sm text-stone-600">
                   شكراً لثقتكم بنا. رقم طلبكم هو{' '}
-                  <span className="font-extrabold text-indigo-600 text-base">{orderConfirmedId}</span>
+                  <span className="font-extrabold text-indigo-600 text-base">{confirmedOrder.id}</span>
                 </p>
                 <p className="text-xs text-stone-500 mt-1">
-                  سنتصل بك على الرقم <span className="font-bold text-stone-900">{phone}</span> لتأكيد موعد التوصيل.
+                  سنتصل بك على الرقم <span className="font-bold text-stone-900">{confirmedOrder.phone}</span> لتأكيد موعد الاستلام/التوصيل.
                 </p>
+              </div>
+
+              {/* High-Converting Direct WhatsApp Confirmation CTA */}
+              <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-lg text-center space-y-2">
+                <p className="text-xs text-emerald-800 font-bold">
+                  لتسريع تجهيز طلبيتك وتأكيدها فوراً:
+                </p>
+                <a
+                  href={storeSettingsService.generateWhatsappOrderLink(confirmedOrder)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-md font-black text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/25 transition-all cursor-pointer"
+                >
+                  <MessageCircle size={18} />
+                  <span>تأكيد الطلبية عبر واتساب الآن 💬</span>
+                </a>
               </div>
 
               <div className="p-4 bg-indigo-50/40 rounded-md border border-indigo-100/70 text-right text-xs space-y-1.5">
@@ -157,25 +190,25 @@ export default function QuickOrderModal({
                   <span>الكمية:</span>
                   <span>{quantity} قطعة</span>
                 </div>
-                {selectedColor && (
-                  <div className="flex justify-between text-stone-600">
-                    <span>اللون:</span>
-                    <span>{selectedColor}</span>
-                  </div>
-                )}
                 <div className="flex justify-between text-stone-600">
-                  <span>العنوان:</span>
-                  <span>{city} - {address}</span>
+                  <span>طريقة الاستلام:</span>
+                  <span className="font-bold text-stone-900">{confirmedOrder.shippingMethod}</span>
+                </div>
+                <div className="flex justify-between text-stone-600">
+                  <span>كلفة التوصيل:</span>
+                  <span className="font-bold text-stone-900">
+                    {confirmedOrder.shipping > 0 ? `${confirmedOrder.shipping.toFixed(3)} د.ت` : 'مجاناً / غير مشمول (0.000 د.ت)'}
+                  </span>
                 </div>
                 <div className="flex justify-between font-bold text-stone-900 pt-2 border-t border-indigo-100 text-sm">
                   <span>المبلغ الإجمالي عند الاستلام:</span>
-                  <span className="text-rose-600 font-black">{total.toFixed(3)} د.ت</span>
+                  <span className="text-rose-600 font-black">{confirmedOrder.total.toFixed(3)} د.ت</span>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Link
-                  to={`/track-order?q=${orderConfirmedId.replace('#', '')}`}
+                  to={`/track-order?q=${confirmedOrder.id.replace('#', '')}`}
                   className="flex-1 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white py-3 rounded-md font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-indigo-200 transition-all cursor-pointer"
                 >
                   <span>تتبع حالة هذا الطلب</span>
@@ -208,7 +241,7 @@ export default function QuickOrderModal({
                     {selectedColor && <span>• اللون: {selectedColor}</span>}
                   </div>
                   <div className="mt-1 text-xs font-black text-rose-600">
-                    {(product.price * quantity).toFixed(3)} د.ت
+                    {subtotal.toFixed(3)} د.ت
                   </div>
                 </div>
               </div>
@@ -287,19 +320,73 @@ export default function QuickOrderModal({
                 </div>
               </div>
 
-              {/* Price summary */}
-              <div className="pt-2 border-t border-indigo-50 text-xs space-y-1 text-stone-600">
-                <div className="flex justify-between">
-                  <span>سعر المنتج ({quantity} قطعة):</span>
-                  <span className="font-bold">{subtotal.toFixed(3)} د.ت</span>
+              {/* Delivery Toggle Button (زر التوصيل الاختياري) */}
+              <div 
+                onClick={() => setIncludeShipping(!includeShipping)}
+                className={`p-3.5 rounded-lg border-2 transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                  includeShipping 
+                    ? 'border-indigo-600 bg-indigo-50/60 shadow-xs' 
+                    : 'border-stone-200 bg-stone-50/70 hover:bg-stone-100/80 hover:border-stone-300'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 transition-colors ${
+                    includeShipping ? 'bg-indigo-600 text-white shadow-xs' : 'bg-stone-200 text-stone-600'
+                  }`}>
+                    {includeShipping ? <Truck size={18} /> : <Store size={18} />}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black text-stone-900">
+                        خدمة التوصيل لباب منزلك
+                      </span>
+                      <span className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
+                        includeShipping ? 'bg-indigo-600 text-white' : 'bg-stone-200 text-stone-700'
+                      }`}>
+                        {includeShipping ? 'مفعل ✓' : 'اختياري (غير مفعل)'}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-500 font-medium mt-0.5">
+                      {includeShipping 
+                        ? 'توصيل سريع لباب منزلك لكامل تراب الجمهورية' 
+                        : 'انقر هنا لإضافة كلفة التوصيل، أو اتركه للحساب بسعر السلعة فقط'}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex justify-between">
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className={`text-xs font-black px-2.5 py-1 rounded-md transition-all ${
+                    includeShipping 
+                      ? 'bg-indigo-600 text-white shadow-xs' 
+                      : 'bg-white border border-stone-200 text-stone-700'
+                  }`}>
+                    {includeShipping 
+                      ? (shippingCost === 0 ? 'مجاني' : `+${standardShippingFee.toFixed(3)} د.ت`) 
+                      : `+${standardShippingFee.toFixed(3)} د.ت`}
+                  </span>
+                  <div className={`w-5 h-5 rounded flex items-center justify-center border transition-colors ${
+                    includeShipping ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-stone-300 bg-white'
+                  }`}>
+                    {includeShipping && <CheckCircle2 size={14} />}
+                  </div>
+                </div>
+              </div>
+
+              {/* Price summary */}
+              <div className="pt-2 border-t border-indigo-50 text-xs space-y-1.5 text-stone-600">
+                <div className="flex justify-between items-center">
+                  <span>سعر السلعة ({quantity} قطعة):</span>
+                  <span className="font-bold text-stone-900">{subtotal.toFixed(3)} د.ت</span>
+                </div>
+                <div className="flex justify-between items-center">
                   <span>كلفة التوصيل (كامل تراب الجمهورية):</span>
-                  <span className={shippingCost === 0 ? "text-emerald-600 font-bold" : "font-bold"}>
-                    {shippingCost === 0 ? 'مجاني (أكثر من 100 د.ت)' : `${shippingCost.toFixed(3)} د.ت`}
+                  <span className={`font-bold ${includeShipping ? (shippingCost === 0 ? "text-emerald-600" : "text-indigo-600 font-black") : "text-stone-400"}`}>
+                    {includeShipping 
+                      ? (shippingCost === 0 ? 'مجاني (أكثر من 100 د.ت)' : `${shippingCost.toFixed(3)} د.ت`) 
+                      : 'غير مشمول (0.000 د.ت)'}
                   </span>
                 </div>
-                <div className="flex justify-between text-sm font-bold text-stone-900 pt-1 border-t border-indigo-50">
+                <div className="flex justify-between text-sm font-bold text-stone-900 pt-1.5 border-t border-indigo-50">
                   <span>المجموع للدفع عند الاستلام:</span>
                   <span className="text-rose-600 text-base font-black">{total.toFixed(3)} د.ت</span>
                 </div>
@@ -309,7 +396,7 @@ export default function QuickOrderModal({
               <div className="grid grid-cols-2 gap-2 text-[11px] text-stone-600 pt-1">
                 <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 p-2 rounded-md border border-emerald-100">
                   <Truck size={14} className="shrink-0 text-emerald-600" />
-                  <span>توصيل سريع لباب منزلك</span>
+                  <span>توصيل لكامل تراب الجمهورية</span>
                 </div>
                 <div className="flex items-center gap-1.5 bg-indigo-50 text-indigo-800 p-2 rounded-md border border-indigo-100">
                   <ShieldCheck size={14} className="shrink-0 text-indigo-600" />

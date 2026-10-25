@@ -16,29 +16,6 @@ interface ProductReviewsProps {
   productName: string;
 }
 
-const defaultReviewsMap: Record<number, Review[]> = {
-  1: [
-    {
-      id: 'rev-1',
-      author: 'سامي الماجري',
-      rating: 5,
-      date: 'منذ يومين',
-      comment: 'جودة الورق ممتازة جداً وأصلية. الحبر لا ينفذ للجهة المقابلة، التغليف كان متقناً والتوصيل سريع إلى نابل.',
-      verified: true,
-      likes: 8
-    },
-    {
-      id: 'rev-2',
-      author: 'مريم بن فرج',
-      rating: 5,
-      date: 'منذ أسبوع',
-      comment: 'دفاتر أكسفورد لا يعلى عليها دائماً، اشتريت كمية كاملة للعام الدراسي ومسرورة بالتعامل مع مكتبتكم.',
-      verified: true,
-      likes: 4
-    }
-  ]
-};
-
 export default function ProductReviews({ productId, productName }: ProductReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -53,33 +30,18 @@ export default function ProductReviews({ productId, productName }: ProductReview
     const stored = localStorage.getItem(storageKey);
     if (stored) {
       try {
-        setReviews(JSON.parse(stored));
-        return;
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          // Filter out legacy dummy mock reviews
+          const realReviews = parsed.filter(r => !r.id.startsWith('rev-1') && !r.id.startsWith('rev-2'));
+          setReviews(realReviews);
+          return;
+        }
       } catch (e) {
         console.error('Error loading reviews', e);
       }
     }
-    const defaults = defaultReviewsMap[productId] || [
-      {
-        id: `rev-${productId}-1`,
-        author: 'كريم المنصوري',
-        rating: 5,
-        date: 'منذ 3 أيام',
-        comment: 'منتج ممتاز ومطابق تماماً للصور والمواصفات. أنصح به بشدة لكل من يبحث عن الجودة.',
-        verified: true,
-        likes: 5
-      },
-      {
-        id: `rev-${productId}-2`,
-        author: 'إيمان الرياحي',
-        rating: 5,
-        date: 'منذ أسبوع',
-        comment: 'سعر مناسب وجودة أصلية، خدمة العملاء أيضاً متعاونة جداً وسرعة التوصيل ممتازة.',
-        verified: true,
-        likes: 3
-      }
-    ];
-    setReviews(defaults);
+    setReviews([]);
   }, [productId]);
 
   const saveReviews = (updated: Review[]) => {
@@ -260,7 +222,14 @@ export default function ProductReviews({ productId, productName }: ProductReview
 
       {/* Reviews List */}
       <div className="divide-y divide-indigo-50 mt-6">
-        {reviews.map((review) => (
+        {reviews.length === 0 ? (
+          <div className="py-8 text-center text-stone-500 space-y-2 bg-stone-50/50 rounded-lg border border-dashed border-stone-200">
+            <MessageSquare size={28} className="mx-auto text-stone-400 stroke-1" />
+            <p className="text-xs font-bold text-stone-700">لا توجد تقييمات لهذا المنتج بعد.</p>
+            <p className="text-[11px] text-stone-400">كن أول من يشاركنا تجربته مع هذا المنتج عبر زر &quot;أضف تقييمك&quot; أعلاه!</p>
+          </div>
+        ) : (
+          reviews.map((review) => (
           <div key={review.id} className="py-5 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -307,7 +276,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
               </button>
             </div>
           </div>
-        ))}
+        )))}
       </div>
     </section>
   );
